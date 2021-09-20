@@ -64,10 +64,10 @@ export default class AllFlights extends Vue {
   public idFlight : string = "";
 
   async mounted () {
-    this.allFlights = (await axios.get<any[]>('http://localhost:5000/api/route/getAllRoutes')).data;
+    this.allFlights = (await axios.get<any[]>('http://localhost:5000/api/flight/getAllFlights')).data;
   };
   async Book(name : string) {
-    var isSuccess = await axios.post<boolean>('http://localhost:5000/api/order/order/'+name, {
+    var isSuccess = await axios.post<boolean>('http://localhost:5000/api/order/'+name, {
       user: {
         name: 'JL'
       },
@@ -75,7 +75,7 @@ export default class AllFlights extends Vue {
     })
 
     if (isSuccess){
-      const bookedFlightResponse : any = (await axios.get<any>('http://localhost:5000/api/route/getBookedRoute/'+name)).data
+      const bookedFlightResponse : any = (await axios.get<any>('http://localhost:5000/api/flight/getFlight/'+name)).data
       const idxFlight = this.allFlights.findIndex(flight => flight.idRoute === bookedFlightResponse.idRoute)
       this.allFlights.splice(idxFlight, 1, bookedFlightResponse)
     }
