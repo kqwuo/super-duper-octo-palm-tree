@@ -12,6 +12,8 @@
                 <th>Name</th>
                 <th>Destination</th>
                 <th>Departure</th>
+                <th>Arrival</th>
+                <th>Price</th>
                 <th>Reservation</th>
                 <th>Tickets number</th>
             </tr>
@@ -21,6 +23,8 @@
                 <td>{{flight.name}}</td>
                 <td>{{flight.destination}}</td>
                 <td>{{flight.departure}}</td>
+                <td>{{flight.arrival}}</td>
+                <td>{{flight.price}}</td>
                 <td><button type="button" @click="Book(flight.name)" class="btn btn-info">Book</button></td>
                 <td>{{flight.tickets}}</td>
             </tr>
@@ -52,10 +56,10 @@ export default {
   },
   setup() {
     const flights = ref([
-      { name: 'GOTA', destination: 'Aéroport Charles de Gaulle', departure: '20:00', tickets: 100 },
-      { name: 'NORA', destination: 'Aéroport de Londres', departure: '18:25', tickets: 100 },
-      { name: 'MONA', destination: 'Aéroport de Helsinki', departure: '14:30', tickets: 100 },
-      { name: 'TUPE', destination: 'Aéroport de Hong Hong', departure: '22:35', tickets: 100 },
+      { name: 'GOTA', destination: 'Aéroport Charles de Gaulle', departure: '20:00', arrival: '22:30', price: '100€', tickets: 100 },
+      { name: 'NORA', destination: 'Aéroport de Londres', departure: '18:25', arrival: '23:30', price: '150€', tickets: 100 },
+      { name: 'MONA', destination: 'Aéroport de Helsinki', departure: '14:30', arrival: '19:45', price: '75€', tickets: 100 },
+      { name: 'TUPE', destination: 'Aéroport de Hong Hong', departure: '22:35', arrival: '02:43', price: '22€', tickets: 100 },
     ]);
 
     return {
