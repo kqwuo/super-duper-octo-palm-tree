@@ -4,7 +4,7 @@
     <h1>{{ msg }}</h1>
     <br>
 
-    <!--<h3>{{ info }}</h3>-->
+    <h3>{{ info }}</h3>
 
     <table class="table table-striped table-bordered">
         <thead>
@@ -37,7 +37,7 @@
 <script>
 
 import { ref } from 'vue';
-//const axios = require('axios');
+const axios = require('axios');
 
 export default {
   name: "Index",
@@ -46,13 +46,13 @@ export default {
   },
   data () {
     return {
-      //info: null
+      info: null
     }
   },
   mounted () {
-    /*axios
+    axios
       .get('localhost:5000/api/route/getAllRoutes')
-      .then(response => (this.info = response.data))*/
+      .then(response => (this.info = response.data))
   },
   setup() {
     const flights = ref([
