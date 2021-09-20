@@ -20,6 +20,7 @@
 
           <div class="modal-footer">
             <slot name="footer">
+              <button type="button" @click="this.$emit('close')" class="btn btn-secondary">Fermer</button>
               <button type="button" @click="this.$parent.Book(idFlight); this.$emit('close')" class="btn btn-info">Valider</button>
             </slot>
           </div>
