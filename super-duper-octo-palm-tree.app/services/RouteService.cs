@@ -17,6 +17,9 @@ namespace super_duper_octo_palm_tree.app.services
         }
 
         public IEnumerable<Route> GetRoutes { get { return _routes; } }
+        public Route GetBookedRoute(Guid idRoute) {
+            return _routes.Find(flight => flight.IdRoute == idRoute);
+        }
 
         public bool SetOrder(Order order, Guid idRoute)
         {
