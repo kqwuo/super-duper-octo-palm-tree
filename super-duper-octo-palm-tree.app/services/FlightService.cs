@@ -18,6 +18,11 @@ namespace super_duper_octo_palm_tree.app.services
         }
 
         public IEnumerable<Flight> GetFlights { get { return _flightList; } }
+        public Flight GetFlight(Guid idFlight)
+        {
+            return _flightList.Find(flight => flight.IdFlight == idFlight);
+        }
+
 
         public bool SetOrder(Order order, Guid idFlight)
         {
