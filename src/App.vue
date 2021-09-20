@@ -1,16 +1,18 @@
 <template>
-  <Index msg="Flights list" />
+  <img alt="Vue logo" src="./assets/logo.png" />
+  <AllFlights/>
 </template>
 
-<script>
-import Index from "./components/Index.vue";
+<script lang="ts">
+import { Options, Vue } from "vue-class-component";
+import AllFlights from "./components/AllFlights.vue";
 
-export default {
-  name: "App",
+@Options({
   components: {
-    Index,
+    AllFlights,
   },
-};
+})
+export default class App extends Vue {}
 </script>
 
 <style>
