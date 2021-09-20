@@ -5,4 +5,8 @@
     <RootNamespace>super_duper_octo_palm_tree.app</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
 </Project>

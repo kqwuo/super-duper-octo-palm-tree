@@ -16,7 +16,7 @@ namespace super_duper_octo_palm_tree.app.controllers
             _orderService = orderService;
         }
 
-        [HttpPost("order/{idRoute}")]
+        [HttpPost("{idRoute}")]
         public async Task<IActionResult> Order(Guid idRoute, [FromBody] Order order)
         {
             return Ok(_orderService.OrderTicket(order, idRoute));
