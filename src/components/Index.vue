@@ -51,15 +51,14 @@ export default {
   },
   mounted () {
     /*axios
-      .get('localhost:5000/api/flights')
-      .then(response => (this.info = response))*/
+      .get('localhost:5000/api/route/getAllRoutes')
+      .then(response => (this.info = response.data))*/
   },
   setup() {
     const flights = ref([
-      { name: 'GOTA', destination: 'Aéroport Charles de Gaulle', departure: '20:00', arrival: '22:30', price: '100€', tickets: 100 },
-      { name: 'NORA', destination: 'Aéroport de Londres', departure: '18:25', arrival: '23:30', price: '150€', tickets: 100 },
-      { name: 'MONA', destination: 'Aéroport de Helsinki', departure: '14:30', arrival: '19:45', price: '75€', tickets: 100 },
-      { name: 'TUPE', destination: 'Aéroport de Hong Hong', departure: '22:35', arrival: '02:43', price: '22€', tickets: 100 },
+      { name: 'DTW', destination: 'JFK', departure: '20:00', arrival: '22:30', price: '300€', tickets: 300 },
+      { name: 'CDG', destination: 'DTW', departure: '18:25', arrival: '23:30', price: '700€', tickets: 700 },
+      { name: 'JFR', destination: 'CDG', departure: '14:30', arrival: '19:45', price: '1000€', tickets: 1000 },
     ]);
 
     return {
