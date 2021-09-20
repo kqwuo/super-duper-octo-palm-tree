@@ -22,10 +22,11 @@ namespace super_duper_octo_palm_tree.app.services
         {
             try
             {
-                var routeToGet = this._routes.Find(x => x.IdRoute == idRoute);
+                var routeToGet = _routes.Find(x => x.IdRoute == idRoute);
                
                 if(routeToGet.AvailableSeats > 0 && routeToGet.AvailableSeats >= order.NbBought)
                 {
+                    routeToGet.AvailableSeats -= order.NbBought;
                     routeToGet.Orders.Add(order);
                     return true;
                 }
