@@ -9,6 +9,14 @@ namespace super_duper_octo_palm_tree.app.models
     {
         public User User { get; set; }
 
-        public int NbBought { get; set; }
+        public int NbBought { get { return TicketList.Count; } }
+
+        public List<Ticket> TicketList { get; set; }
+
+        public double TotalPrice {
+            get {
+                return TicketList.Sum(ticket => ticket.PaidTotal);
+            }
+        }
     }
 }
