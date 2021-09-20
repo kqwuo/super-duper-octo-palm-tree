@@ -23,8 +23,9 @@ namespace super_duper_octo_palm_tree.app
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<RouteService>();
+            services.AddSingleton<FlightService>();
             services.AddSingleton<OrderService>();
+            services.AddHostedService<CurrencyService>();
 
             services.AddControllers();
         }

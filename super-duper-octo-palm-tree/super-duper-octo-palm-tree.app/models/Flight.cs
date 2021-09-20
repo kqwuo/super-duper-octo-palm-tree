@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace super_duper_octo_palm_tree.app.models
 {
-    public class Route
+    public class Flight
     {
-        public Route()
+        public Flight()
         {
-            //IdRoute = Guid.NewGuid();
+            //IdFlight = Guid.NewGuid();
             Orders = new List<Order>();
             AdditionalLuggagePrice = 100;
             //OrderQueue = new Queue<Order>();
         }
 
-        public Guid IdRoute { get; set; }
+        public Guid IdFlight { get; set; }
         public double BasePrice { get; set; }
         public double AdditionalLuggagePrice { get; set; }
         public Airport DeparturePlace { get; set; }
