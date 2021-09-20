@@ -24,6 +24,7 @@ namespace super_duper_octo_palm_tree.app
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<RouteService>();
+            services.AddSingleton<OrderService>();
 
             services.AddControllers();
         }
