@@ -13,9 +13,32 @@ namespace super_duper_octo_palm_tree.app.models
 
         public List<Ticket> TicketList { get; set; }
 
+        public double TotalBasePrice {
+            get
+            {
+                return TicketList.Sum(ticket => ticket.BasePrice);
+            }
+        }
+
+        public double TotalAdditionalPrice
+        {
+            get
+            {
+                return TicketList.Sum(ticket => ticket.AdditionalPrice);
+            }
+        }
+
+        public double TotalDiscountedBasePrice
+        {
+            get
+            {
+                return TicketList.Sum(ticket => ticket.DiscountedBasePrice);
+            }
+        }
+
         public double TotalPrice {
             get {
-                return TicketList.Sum(ticket => ticket.PaidTotal);
+                return TotalDiscountedBasePrice + TotalAdditionalPrice;
             }
         }
     }

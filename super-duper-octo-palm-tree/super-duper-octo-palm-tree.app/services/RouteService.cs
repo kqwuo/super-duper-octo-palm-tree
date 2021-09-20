@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using super_duper_octo_palm_tree.app.models;
 
 namespace super_duper_octo_palm_tree.app.services
@@ -28,10 +29,15 @@ namespace super_duper_octo_palm_tree.app.services
 
                 if(routeToGet.AvailableSeats > 0 && routeToGet.AvailableSeats >= order.NbBought)
                 {
-                    foreach( Ticket ticket in order.TicketList )
+                    bool isFamily = (order.TicketList.Count >= 3
+                        && order.TicketList.Select(t => t.UserType == UserType.Adult).Count() >= 2
+                        && order.TicketList.Select(t => t.UserType == UserType.Child).Count() >= 1);
+
+                    foreach ( Ticket ticket in order.TicketList )
                     {
-                        ticket.PaidBasePrice = routeToGet.BasePrice;
-                        ticket.PaidAdditionalPrice = routeToGet.AdditionalLuggagePrice * ticket.NbAdditionalLuggage;
+                        ticket.BasePrice = routeToGet.BasePrice;
+                        ticket.AdditionalPrice = routeToGet.AdditionalLuggagePrice * ticket.NbAdditionalLuggage;
+                        ticket.BasePriceDiscount = (uint)(isFamily ? 10 : 0);
                     }
                     routeToGet.AvailableSeats -= order.NbBought;
                     routeToGet.Orders.Add(order);
