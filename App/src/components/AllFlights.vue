@@ -1,39 +1,51 @@
 <template>
   <div class="container">
+    <br /><br />
 
-    <br><br>
-
-    <select v-model="type">
-       <option v-for="item in inventory" :value="item" :key="item.id">
-        {{ item.name }}
+    <select @change="onChangeCurrency($event)" v-model="currentCurrency">
+      <option
+        v-for="item in allCurrencies"
+        :value="getValueCurrencies(item.type)"
+        :key="item.type"
+      >
+        {{ getValueCurrencies(item.type) }}
       </option>
     </select>
 
-    <br><br><br>
+    <br /><br /><br />
 
     <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Destination</th>
-                <th>Departure</th>
-                <th>Arrival</th>
-                <th>Price</th>
-                <th>Reservation</th>
-                <th>Tickets number</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="flight in allFlights" :key="flight.idRoute">
-                <td>{{ flight.arrivalPlace }}</td>
-                <td>{{ flight.departurePlace }}</td>
-                <td>?</td>
-                <td>?</td>
-                <td>{{ flight.price }}</td>
-                <td><button type="button" @click="showModal(flight.idRoute)" class="btn btn-info">Book</button></td> <!-- Book(flight.idRoute) -->
-                <td>{{ flight.availableSeats }}</td>
-            </tr>
-        </tbody>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Destination</th>
+          <th>Departure</th>
+          <th>Arrival</th>
+          <th>Price</th>
+          <th>Reservation</th>
+          <th>Tickets number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="flight in allFlights" :key="flight.idRoute">
+          <td>{{ flight.arrivalPlace }}</td>
+          <td>{{ flight.departurePlace }}</td>
+          <td>?</td>
+          <td>?</td>
+          <td>{{ (flight.basePrice * currencyRate).toFixed(2) }} &nbsp; {{ symbolCurrency }}</td>
+          <td>
+            <button
+              type="button"
+              @click="showModal(flight.idRoute)"
+              class="btn btn-info"
+            >
+              Book
+            </button>
+          </td>
+          <!-- Book(flight.idRoute) -->
+          <td>{{ flight.availableSeats }}</td>
+        </tr>
+      </tbody>
     </table>
 
     <BookModal
@@ -41,43 +53,96 @@
       :idFlight="idFlight"
       @close="closeModal"
     />
-
-</div> 
+  </div>
 </template>
 
 <script lang="ts">
-import { Vue, Options } from 'vue-class-component';
-import axios from "axios"
-import BookModal from './BookModal.vue';
+import { Vue, Options } from "vue-class-component";
+import axios from "axios";
+import BookModal from "./BookModal.vue";
+import { Currency, CurrencySymbol, CurrencyType } from "../models/currency";
 
 @Options({
   components: {
     BookModal,
   },
 })
-
 export default class AllFlights extends Vue {
-  public allFlights : any[] = [];
-  public allCurrencies : any[] = [];
-  public isModalVisible : boolean = false;
+  public allFlights: any[] = [];
+  public allCurrencies: Currency[] = [];
+  public currentCurrency: string = "EUR";
+  public symbolCurrency: string = "€";
+  public isModalVisible: boolean = false;
+  public currencyRate: number = 1;
 
-  public idFlight : string = "";
+  public idFlight: string = "";
 
-  async mounted () {
-    this.allFlights = (await axios.get<any[]>('http://localhost:5000/api/flight/getAllFlights')).data;
-  };
-  async Book(name : string) {
-    var isSuccess = await axios.post<boolean>('http://localhost:5000/api/order/'+name, {
-      user: {
-        name: 'JL'
-      },
-      nbBought: 3
-    })
+  async mounted() {
+    this.allFlights = (
+      await axios.get<any[]>("http://localhost:5000/api/flight/getAllFlights")
+    ).data;
 
-    if (isSuccess){
-      const bookedFlightResponse : any = (await axios.get<any>('http://localhost:5000/api/flight/getFlight/'+name)).data
-      const idxFlight = this.allFlights.findIndex(flight => flight.idRoute === bookedFlightResponse.idRoute)
-      this.allFlights.splice(idxFlight, 1, bookedFlightResponse)
+    const currencyType = this.ToArray(CurrencyType);
+
+    this.allCurrencies = currencyType.map<Currency>((x, index) => {
+      return { symbol: CurrencySymbol[x], type: index };
+    });
+
+    this.currentCurrency = CurrencyType[this.allCurrencies[0].type];
+    this.symbolCurrency = this.allCurrencies[0].symbol;
+
+    this.currencyRate = (
+      await axios.get<number>(
+        `http://localhost:5000/api/currency/${this.allCurrencies[0].type}`
+      )
+    ).data;
+  }
+
+  async onChangeCurrency(event: any) {
+
+    const newCurrency = this.allCurrencies.find(x => x.type === parseInt(CurrencyType[event.target.value]))
+    this.currencyRate = (
+      await axios.get<number>(
+        `http://localhost:5000/api/currency/${newCurrency.type}`
+      )
+    ).data;
+
+    this.currentCurrency = CurrencyType[newCurrency.type];
+    this.symbolCurrency = newCurrency.symbol;
+
+  }
+
+  getValueCurrencies(type: CurrencyType) {
+    return CurrencyType[type];
+  }
+
+  ToArray(enumme: any) {
+    return Object.keys(enumme)
+      .filter((value: string) => !isNaN(Number(value)))
+      .map((key) => enumme[key]);
+  }
+
+  async Book(name: string) {
+    var isSuccess = await axios.post<boolean>(
+      "http://localhost:5000/api/order/" + name,
+      {
+        user: {
+          name: "JL",
+        },
+        nbBought: 3,
+      }
+    );
+
+    if (isSuccess) {
+      const bookedFlightResponse: any = (
+        await axios.get<any>(
+          "http://localhost:5000/api/flight/getFlight/" + name
+        )
+      ).data;
+      const idxFlight = this.allFlights.findIndex(
+        (flight) => flight.idRoute === bookedFlightResponse.idRoute
+      );
+      this.allFlights.splice(idxFlight, 1, bookedFlightResponse);
     }
   }
 
@@ -89,10 +154,8 @@ export default class AllFlights extends Vue {
     this.isModalVisible = false;
   }
 }
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>
