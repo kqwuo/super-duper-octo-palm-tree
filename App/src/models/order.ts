@@ -1,6 +1,6 @@
 import { Ticket } from "./ticket";
 import { User } from "./user";
-import { Currency } from "./currency";
+import { Currency, CurrencyType } from "./currency";
 
 export interface Order {
   user: User
@@ -10,7 +10,7 @@ export interface Order {
   totalAdditionalPrice: number
   totalDiscountedBasePrice: number
   totalPrice: number
-  usedCurrency: Currency
+  usedCurrency: CurrencyType
   exchangeRate: number
   isPaid: boolean
 }

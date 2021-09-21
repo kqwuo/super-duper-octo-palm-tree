@@ -35,7 +35,7 @@
                 <td>?</td>
                 <td>{{ (flight.basePrice * currencyRate).toFixed(2) }} &nbsp; {{ symbolCurrency }}</td>
                 <td>{{ flight.additionalLuggagePrice }}</td>
-                <td><button type="button" @click="showModal(flight.idFlight)" class="btn btn-info">Book</button></td> <!-- Book(flight.idRoute) -->
+                <td><button type="button" @click="showModal(flight)" class="btn btn-info">Book</button></td> <!-- Book(flight.idRoute) -->
                 <td>{{ flight.availableSeats }}</td>
             </tr>
         </tbody>
@@ -43,7 +43,8 @@
 
     <BookModal
       v-show="isModalVisible"
-      :idFlight="idFlight"
+      :flight="selectedFlight"
+      :currency="currency"
       @close="closeModal"
     />
   </div>
@@ -69,15 +70,18 @@ export default class AllFlights extends Vue {
   public symbolCurrency: string = "€";
   public isModalVisible: boolean = false;
   public currencyRate: number = 1;
+  public currency?: Currency;
   public idFlight : string = "";
+  public selectedFlight: Flight | null = null;
 
   async mounted () {
     this.allFlights = (await axios.get<Array<Flight>>('http://localhost:5000/api/flight/getAllFlights')).data;
-    const currencyType = this.ToArray(CurrencyType);
+    const currencyType : string[] = this.ToArray(CurrencyType);
 
-    this.allCurrencies = currencyType.map<Currency>((x, index) => {
-      return { symbol: CurrencySymbol[x], type: index };
+    this.allCurrencies = currencyType.map<Currency>((x : any, index) => {
+      return { symbol: CurrencySymbol[x as keyof typeof CurrencySymbol], type: index };
     });
+    this.currency = this.allCurrencies[0];
 
     this.currentCurrency = CurrencyType[this.allCurrencies[0].type];
     this.symbolCurrency = this.allCurrencies[0].symbol;
@@ -92,15 +96,18 @@ export default class AllFlights extends Vue {
   async onChangeCurrency(event: any) {
 
     const newCurrency = this.allCurrencies.find(x => x.type === parseInt(CurrencyType[event.target.value]))
+    if(newCurrency){
     this.currencyRate = (
       await axios.get<number>(
         `http://localhost:5000/api/currency/${newCurrency.type}`
       )
     ).data;
 
+    this.currency = newCurrency;
+    this.currency.rate = this.currencyRate;
     this.currentCurrency = CurrencyType[newCurrency.type];
     this.symbolCurrency = newCurrency.symbol;
-
+    }
   }
 
   getValueCurrencies(type: CurrencyType) {
@@ -124,9 +131,10 @@ export default class AllFlights extends Vue {
     }
   }
 
-  showModal(id: string) {
+  showModal(flight: Flight) {
     this.isModalVisible = true;
-    this.idFlight = id;
+    this.selectedFlight = flight;
+    console.log(this.selectedFlight);
   }
   closeModal() {
     this.isModalVisible = false;

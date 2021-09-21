@@ -10,5 +10,6 @@ export enum CurrencySymbol {
 
 export interface Currency {
     type: CurrencyType,
-    symbol: CurrencySymbol
+    symbol: CurrencySymbol,
+    rate?: number
 }

@@ -40,13 +40,13 @@
               <td>
                 <input
                   type="number"
-                  :value="ticket.nbAdditionalLuggage"
+                  v-model="ticket.nbAdditionalLuggage"
                   min="0"
                   max="3"
                 />
               </td>
               <td>
-                // //
+                {{(((this.flight?.basePrice + (this.flight?.additionalLuggagePrice * ticket.nbAdditionalLuggage)) * (this.currency?.rate ?? 1))).toFixed(2)}} {{this.currency?.symbol}}
               </td>
               <td>
                 <button
@@ -74,7 +74,7 @@
           <button
             type="button"
             @click="
-              this.$parent.Book(idFlight, this.order);
+              this.$parent.Book(flight.idFlight, this.order);
               this.order = this.createDefault();
               this.$emit('close');
             "
@@ -89,15 +89,17 @@
 </template>
 
 <script lang="ts">
+import { Flight } from "@/models/flight";
 import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
-import { Currency } from "../models/currency";
+import { Currency, CurrencyType } from "../models/currency";
 import { Order } from "../models/order";
 import { Ticket } from "../models/ticket";
 import { UserType } from "../models/usertype";
 
 export default class BookModal extends Vue {
-  @Prop() public idFlight?: any;
+  @Prop() public flight?: Flight;
+  @Prop() public currency?: Currency;
   order: Order = this.createDefault();
 
   userTypeEnum = UserType;
@@ -129,7 +131,7 @@ export default class BookModal extends Vue {
       totalAdditionalPrice: 0,
       totalDiscountedBasePrice: 0,
       totalPrice: 0,
-      usedCurrency: Currency.EUR,
+      usedCurrency: CurrencyType.EUR,
       exchangeRate: 0,
       isPaid: false,
     };
