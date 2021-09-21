@@ -30,6 +30,9 @@ namespace super_duper_octo_palm_tree.app.services
             {
                 var flightToGet = _flightList.Find(x => x.IdFlight == idFlight);
 
+                if (flightToGet == null)
+                    return false;
+
                 //flightToGet.OrderQueue.Enqueue(order);
 
                 if (flightToGet.AvailableSeats > 0 && flightToGet.AvailableSeats >= order.NbBought)
@@ -48,14 +51,13 @@ namespace super_duper_octo_palm_tree.app.services
                     flightToGet.Orders.Add(order);
                     return true;
                 }
-
+                return false;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                return false;
             }
-            return false;
-
         }
     }
 }

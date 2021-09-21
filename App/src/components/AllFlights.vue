@@ -19,18 +19,20 @@
                 <th>Departure</th>
                 <th>Arrival</th>
                 <th>Price</th>
+                <th>Additional luggage price</th>
                 <th>Reservation</th>
                 <th>Tickets number</th>
             </tr>
         </thead>
         <tbody>
-            <tr v-for="flight in allFlights" :key="flight.idRoute">
+            <tr v-for="flight in allFlights" :key="flight.idFlight">
                 <td>{{ flight.arrivalPlace }}</td>
                 <td>{{ flight.departurePlace }}</td>
                 <td>?</td>
                 <td>?</td>
-                <td>{{ flight.price }}</td>
-                <td><button type="button" @click="showModal(flight.idRoute)" class="btn btn-info">Book</button></td> <!-- Book(flight.idRoute) -->
+                <td>{{ flight.basePrice }}</td>
+                <td>{{ flight.additionalLuggagePrice }}</td>
+                <td><button type="button" @click="showModal(flight.idFlight)" class="btn btn-info">Book</button></td> <!-- Book(flight.idRoute) -->
                 <td>{{ flight.availableSeats }}</td>
             </tr>
         </tbody>
@@ -49,6 +51,8 @@
 import { Vue, Options } from 'vue-class-component';
 import axios from "axios"
 import BookModal from './BookModal.vue';
+import { Flight } from "../models/flight";
+import { Order } from '../models/order';
 
 @Options({
   components: {
@@ -57,26 +61,22 @@ import BookModal from './BookModal.vue';
 })
 
 export default class AllFlights extends Vue {
-  public allFlights : any[] = [];
+  public allFlights : Array<Flight> = new Array<Flight>();
   public allCurrencies : any[] = [];
   public isModalVisible : boolean = false;
 
   public idFlight : string = "";
 
   async mounted () {
-    this.allFlights = (await axios.get<any[]>('http://localhost:5000/api/flight/getAllFlights')).data;
+    this.allFlights = (await axios.get<Array<Flight>>('http://localhost:5000/api/flight/getAllFlights')).data;
   };
-  async Book(name : string) {
-    var isSuccess = await axios.post<boolean>('http://localhost:5000/api/order/'+name, {
-      user: {
-        name: 'JL'
-      },
-      nbBought: 3
-    })
+  async Book(idFlight: string, order: Order) {
+    console.log(order);
+    var isSuccess = await axios.post<boolean>('http://localhost:5000/api/order/' + idFlight, order)
 
     if (isSuccess){
-      const bookedFlightResponse : any = (await axios.get<any>('http://localhost:5000/api/flight/getFlight/'+name)).data
-      const idxFlight = this.allFlights.findIndex(flight => flight.idRoute === bookedFlightResponse.idRoute)
+      const bookedFlightResponse : Flight = (await axios.get<Flight>('http://localhost:5000/api/flight/getFlight/'+idFlight)).data
+      const idxFlight = this.allFlights.findIndex(flight => flight.idFlight === bookedFlightResponse.idFlight)
       this.allFlights.splice(idxFlight, 1, bookedFlightResponse)
     }
   }
