@@ -12,19 +12,25 @@ namespace super_duper_octo_palm_tree.app.services
         public FlightService()
         {
             _flightList = new List<Flight>();
-            _flightList.Add(new Flight() { IdFlight = Guid.Parse("bb1cd427-8591-42c2-9ee8-e163d2c333c8"), DeparturePlace = Airport.DTW, ArrivalPlace = Airport.CDG, BasePrice = 700, AvailableSeats = 700 }); ;
-            _flightList.Add(new Flight() { IdFlight = Guid.Parse("bbc85e45-fca0-4e1c-8ed1-3ea88acedea8"), DeparturePlace = Airport.CDG, ArrivalPlace = Airport.JFK, BasePrice = 1000, AvailableSeats = 1000 });
-            _flightList.Add(new Flight() { IdFlight = Guid.Parse("5261397c-2cbc-4d94-96dd-79c25354db09"), DeparturePlace = Airport.DTW, ArrivalPlace = Airport.JFK, BasePrice = 300, AvailableSeats = 300, AdditionalLuggagePrice = 30 });
+            _flightList.Add(new Flight() { IdFlight = Guid.Parse("bb1cd427-8591-42c2-9ee8-e163d2c333c8").ToString(), DeparturePlace = Airport.DTW, ArrivalPlace = Airport.CDG, BasePrice = 700, AvailableSeats = 700 }); ;
+            _flightList.Add(new Flight() { IdFlight = Guid.Parse("bbc85e45-fca0-4e1c-8ed1-3ea88acedea8").ToString(), DeparturePlace = Airport.CDG, ArrivalPlace = Airport.JFK, BasePrice = 1000, AvailableSeats = 1000 });
+            _flightList.Add(new Flight() { IdFlight = Guid.Parse("5261397c-2cbc-4d94-96dd-79c25354db09").ToString(), DeparturePlace = Airport.DTW, ArrivalPlace = Airport.JFK, BasePrice = 300, AvailableSeats = 300, AdditionalLuggagePrice = 30 });
         }
 
-        public IEnumerable<Flight> GetFlights { get { return _flightList; } }
-        public Flight GetFlight(Guid idFlight)
+        public IEnumerable<Flight> GetFlights {
+            get {
+                var result = new List<Flight>(_flightList);
+                result.AddRange(new List<Flight>());
+                return result;
+            }
+        }
+
+        public Flight GetFlight(string idFlight)
         {
             return _flightList.Find(flight => flight.IdFlight == idFlight);
         }
 
-
-        public bool SetOrder(Order order, Guid idFlight)
+        public bool SetOrder(Order order, string idFlight)
         {
             try
             {

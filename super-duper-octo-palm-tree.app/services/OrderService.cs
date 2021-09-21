@@ -11,7 +11,7 @@ namespace super_duper_octo_palm_tree.app.services
             _routeService = routeService;
         }
 
-        public bool OrderTicket(Order order, Guid idRoute)
+        public bool OrderTicket(Order order, string idRoute)
         {
             var isOrder = _routeService.SetOrder(order, idRoute);
             return isOrder;

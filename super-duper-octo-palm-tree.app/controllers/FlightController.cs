@@ -23,7 +23,7 @@ namespace super_duper_octo_palm_tree.app.controllers
         }
 
         [HttpGet("getFlight/{idRoute}")]
-        public async Task<IActionResult> GetBookedRoute(Guid idRoute)
+        public async Task<IActionResult> GetBookedRoute(string idRoute)
         {
             return Ok(_flightService.GetFlight(idRoute));
         }
