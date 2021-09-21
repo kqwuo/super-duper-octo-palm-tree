@@ -3,10 +3,13 @@
     <div class="modal-wrapper">
       <div class="modal-container">
         <div class="modal-body">
+          <span style="color:red; font-weight:bold">{{errorMessage}}</span>
           <div class="summary">
             Nom de l'acheteur :
             <input v-model="this.order.user.name" type="text" /> Prix total :
-            {{ recalculate() }}&nbsp;{{ this.currency?.symbol }}
+            {{ recalculate() * (this.currency?.rate ?? 1) }}&nbsp;{{
+              this.currency?.symbol
+            }}
           </div>
           <table class="ticket-list">
             <tr>
@@ -82,9 +85,7 @@
           <button
             type="button"
             @click="
-              this.$parent.Book(flight.idFlight, this.order);
-              this.order = this.createDefault();
-              this.$emit('close');
+             validate()
             "
             class="btn btn-info"
           >
@@ -109,6 +110,8 @@ export default class BookModal extends Vue {
   @Prop() public flight?: Flight;
   @Prop() public currency?: Currency;
   order: Order = this.createDefault();
+
+  public errorMessage: string = "";
 
   userTypeEnum = UserType;
 
@@ -155,7 +158,8 @@ export default class BookModal extends Vue {
     this.order.ticketList.forEach(
       (x) =>
         (totalPrice +=
-          this.flight!.basePrice + this.flight!.additionalLuggagePrice * x.nbAdditionalLuggage)
+          this.flight!.basePrice +
+          this.flight!.additionalLuggagePrice * x.nbAdditionalLuggage)
     );
 
     return totalPrice;
@@ -163,6 +167,24 @@ export default class BookModal extends Vue {
 
   close() {
     this.$emit("close");
+  }
+
+  validate() {
+    this.errorMessage = "";
+    const ticket = this.order.ticketList.find(
+      (x) => x.lastName === "" || x.firstName == ""
+    );  
+
+
+    if (this.order.user.name && !ticket) {
+      const parent: any = this.$parent;
+      parent.Book(this.flight!.idFlight, this.order);
+      this.order = this.createDefault();
+      this.$emit("close");
+    } else {
+      this.errorMessage =
+        "Un des champs requis : Nom, Prenom est vide.Veuillez remplir le necessaire";
+    }
   }
 }
 </script>
