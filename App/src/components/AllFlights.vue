@@ -42,6 +42,7 @@
     </table>
 
     <BookModal
+      v-if="isModalVisible"
       v-show="isModalVisible"
       :flight="selectedFlight"
       :currency="currency"
@@ -91,6 +92,9 @@ export default class AllFlights extends Vue {
         `http://localhost:5000/api/currency/${this.allCurrencies[0].type}`
       )
     ).data;
+
+    this.currency.rate = this.currencyRate;
+
   };
 
   async onChangeCurrency(event: any) {
@@ -134,7 +138,6 @@ export default class AllFlights extends Vue {
   showModal(flight: Flight) {
     this.isModalVisible = true;
     this.selectedFlight = flight;
-    console.log(this.selectedFlight);
   }
   closeModal() {
     this.isModalVisible = false;

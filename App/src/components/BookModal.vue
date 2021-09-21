@@ -4,8 +4,9 @@
       <div class="modal-container">
         <div class="modal-body">
           <div class="summary">
-            Nom de l'acheteur : <input v-model="this.order.user.name" type="text" />
-            Prix total : // //
+            Nom de l'acheteur :
+            <input v-model="this.order.user.name" type="text" /> Prix total :
+            {{ recalculate() }}&nbsp;{{ this.currency?.symbol }}
           </div>
           <table class="ticket-list">
             <tr>
@@ -41,12 +42,21 @@
                 <input
                   type="number"
                   v-model="ticket.nbAdditionalLuggage"
+                  @click="recalculate()"
                   min="0"
                   max="3"
                 />
               </td>
               <td>
-                {{(((this.flight?.basePrice + (this.flight?.additionalLuggagePrice * ticket.nbAdditionalLuggage)) * (this.currency?.rate ?? 1))).toFixed(2)}} {{this.currency?.symbol}}
+                {{
+                  (
+                    (this.flight?.basePrice +
+                      this.flight?.additionalLuggagePrice *
+                        ticket.nbAdditionalLuggage) *
+                    (this.currency?.rate ?? 1)
+                  ).toFixed(2)
+                }}
+                {{ this.currency?.symbol }}
               </td>
               <td>
                 <button
@@ -58,9 +68,7 @@
               </td>
             </tr>
           </table>
-          <button @click="this.order.ticketList.push(this.createTicket())">
-            +
-          </button>
+          <button @click="addTicket()">+</button>
         </div>
 
         <div class="modal-footer">
@@ -132,9 +140,25 @@ export default class BookModal extends Vue {
       totalDiscountedBasePrice: 0,
       totalPrice: 0,
       usedCurrency: CurrencyType.EUR,
-      exchangeRate: 0,
+      exchangeRate: this.currency?.rate!,
       isPaid: false,
     };
+  }
+
+  addTicket() {
+    this.order.ticketList.push(this.createTicket());
+    this.recalculate();
+  }
+
+  recalculate() {
+    let totalPrice = 0;
+    this.order.ticketList.forEach(
+      (x) =>
+        (totalPrice +=
+          this.flight!.basePrice + this.flight!.additionalLuggagePrice * x.nbAdditionalLuggage)
+    );
+
+    return totalPrice;
   }
 
   close() {
