@@ -4,6 +4,7 @@
     {
         DTW,
         CDG,
-        JFK
+        JFK,
+        LAD
     }
 }

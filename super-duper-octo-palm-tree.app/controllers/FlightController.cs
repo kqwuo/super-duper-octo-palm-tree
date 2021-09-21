@@ -10,16 +10,18 @@ namespace super_duper_octo_palm_tree.app.controllers
     public class FlightController : ControllerBase
     {
         FlightService _flightService;
+        private readonly CommonFlightService commonFlightService;
 
-        public FlightController(FlightService flightService)
+        public FlightController(FlightService flightService, CommonFlightService commonFlightService)
         {
             _flightService = flightService;
+            this.commonFlightService = commonFlightService;
         }
 
         [HttpGet("getAllFlights")]
         public async Task<IActionResult> GetAllFlights([FromQuery] Currency currency = Currency.EUR)
         {
-            return Ok(_flightService.GetFlights);
+            return Ok(await commonFlightService.GetFlightsAsync());
         }
 
         [HttpGet("getFlight/{idRoute}")]

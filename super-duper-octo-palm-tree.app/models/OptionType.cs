@@ -1,6 +1,6 @@
-﻿namespace super_duper_octo_palm_tree.app.models.external
+﻿namespace super_duper_octo_palm_tree.app.models
 {
-    public enum ExternalOptionType
+    public enum OptionType
     {
         BonusLuggage,
         FirstClass,

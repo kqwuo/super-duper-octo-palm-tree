@@ -28,6 +28,7 @@ namespace super_duper_octo_palm_tree.app.models
         public int AvailableSeats { get; set; }
 
         public List<Order> Orders { get; set; }
+        public IEnumerable<FlightOptions> FlightOptions { get; set; }
 
         //public Queue<Order> OrderQueue { get; }
     }

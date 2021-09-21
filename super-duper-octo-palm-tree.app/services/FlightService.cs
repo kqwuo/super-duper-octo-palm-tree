@@ -17,11 +17,11 @@ namespace super_duper_octo_palm_tree.app.services
             _flightList.Add(new Flight() { IdFlight = Guid.Parse("5261397c-2cbc-4d94-96dd-79c25354db09").ToString(), DeparturePlace = Airport.DTW, ArrivalPlace = Airport.JFK, BasePrice = 300, AvailableSeats = 300, AdditionalLuggagePrice = 30 });
         }
 
-        public IEnumerable<Flight> GetFlights {
-            get {
-                var result = new List<Flight>(_flightList);
-                result.AddRange(new List<Flight>());
-                return result;
+        public IEnumerable<Flight> GetFlights
+        {
+            get
+            {
+                return _flightList;
             }
         }
 
@@ -47,7 +47,7 @@ namespace super_duper_octo_palm_tree.app.services
                         && order.TicketList.Select(t => t.UserType == UserType.Adult).Count() >= 2
                         && order.TicketList.Select(t => t.UserType == UserType.Child).Count() >= 1);
 
-                    foreach ( Ticket ticket in order.TicketList )
+                    foreach (Ticket ticket in order.TicketList)
                     {
                         ticket.BasePrice = flightToGet.BasePrice;
                         ticket.AdditionalPrice = flightToGet.AdditionalLuggagePrice * ticket.NbAdditionalLuggage;

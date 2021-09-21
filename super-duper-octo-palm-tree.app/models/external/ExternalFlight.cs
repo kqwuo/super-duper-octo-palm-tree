@@ -1,22 +1,17 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace super_duper_octo_palm_tree.app.models.external
 {
     public class ExternalFlight
     {
-        [JsonPropertyName("code")]
         public string code { get; set; }
-        [JsonPropertyName("departure")]
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public ExternalAirport departure { get; set; }
-        [JsonPropertyName("arrival")]
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public ExternalAirport arrival { get; set; }
-        [JsonPropertyName("base_price")]
+        public string departure { get; set; }
+        public string arrival { get; set; }
         public int base_price { get; set; }
-        [JsonPropertyName("plane")]
         public ExternalPlane plane { get; set; }
-        [JsonPropertyName("seats_booked")]
         public int seats_booked { get; set; }
+
+        public IEnumerable<ExternalFlightOptions> flightOptions { get; set; }
     }
 }

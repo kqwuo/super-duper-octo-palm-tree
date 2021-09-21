@@ -10,6 +10,6 @@ namespace super_duper_octo_palm_tree.app.models.external
         public int payed_price { get; set; }
         public string customer_name { get; set; }
         public string customer_nationality { get; set; }
-        public List<ExternalFlightOptions>? options { get; set; }
+        public List<FlightOptions>? options { get; set; }
     }
 }
