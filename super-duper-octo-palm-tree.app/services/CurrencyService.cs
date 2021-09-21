@@ -15,12 +15,13 @@ namespace super_duper_octo_palm_tree.app.services
 {
     public class CurrencyService : BackgroundService
     {
+        private readonly SharedCurrencyService sharedCurrencyService;
         HttpClient _httpClient;
-        double _currency = 0;
 
-        public CurrencyService()
+        public CurrencyService(SharedCurrencyService sharedCurrencyService)
         {
             _httpClient = new HttpClient();
+            this.sharedCurrencyService = sharedCurrencyService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -45,14 +46,14 @@ namespace super_duper_octo_palm_tree.app.services
                             .Select(x => x.Attributes.GetNamedItem("rate").Value)
                             .First(), CultureInfo.InvariantCulture);
 
-                        if(t == _currency)
+                        if(t == sharedCurrencyService._currency)
                         {
                             failedCount++;
                             failed = true;
                         }
                         else
                         {
-                            _currency = t;
+                            sharedCurrencyService._currency = t;
                             failedCount = 0;
                         }
                     }

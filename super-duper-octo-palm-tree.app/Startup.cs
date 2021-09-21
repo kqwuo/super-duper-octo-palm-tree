@@ -25,6 +25,7 @@ namespace super_duper_octo_palm_tree.app
         {
             services.AddSingleton<FlightService>();
             services.AddSingleton<OrderService>();
+            services.AddSingleton<SharedCurrencyService>();
             services.AddHostedService<CurrencyService>();
 
             services.AddCors(options =>

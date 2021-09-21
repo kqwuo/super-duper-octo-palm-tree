@@ -1,4 +1,14 @@
-export enum Currency {
-  EUR = 0,
-  USD = 1
+export enum CurrencyType {
+    EUR,
+    USD
+}
+
+export enum CurrencySymbol {
+    EUR = "€",
+    USD = "$"
+}
+
+export interface Currency {
+    type: CurrencyType,
+    symbol: CurrencySymbol
 }
