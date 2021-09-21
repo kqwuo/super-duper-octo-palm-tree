@@ -3,22 +3,64 @@
     <div class="modal-wrapper">
       <div class="modal-container">
         <div class="modal-body">
-          <div style="display:flex;" v-for="ticket in this.order.ticketList" :value="ticket" :key="ticket">
-            <p>Nom</p>
-            <input v-model="ticket.firstName" />
-            <br /><br />
-            <p>Prénom</p>
-            <input v-model="ticket.lastName" />
-            <br /><br />
-            <p>Type</p>
-            <select v-model="ticket.userType">
-              <option :value="this.userTypeEnum.adult"><p>Adulte</p></option>
-              <option :value="this.userTypeEnum.child"><p>Enfant</p></option>
-            </select>
-            <input type="number" :value="ticket.nbAdditionalLuggage" min="0" max="3" />
+          <div class="summary">
+            Nom de l'acheteur : <input v-model="this.order.user.name" type="text" />
+            Prix total : // //
           </div>
-          <br><br>
-          <button @click="this.order.ticketList.push(this.createTicket())">+</button>
+          <table class="ticket-list">
+            <tr>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Type</th>
+              <th>Baggages supplémentaires</th>
+              <th>Prix</th>
+              <th></th>
+            </tr>
+            <tr
+              v-for="(ticket, idx) in this.order.ticketList"
+              :value="ticket"
+              :key="idx"
+            >
+              <td>
+                <input v-model="ticket.lastName" />
+              </td>
+              <td>
+                <input v-model="ticket.firstName" />
+              </td>
+              <td>
+                <select v-model="ticket.userType">
+                  <option :value="this.userTypeEnum.adult">
+                    <p>Adulte</p>
+                  </option>
+                  <option :value="this.userTypeEnum.child">
+                    <p>Enfant</p>
+                  </option>
+                </select>
+              </td>
+              <td>
+                <input
+                  type="number"
+                  :value="ticket.nbAdditionalLuggage"
+                  min="0"
+                  max="3"
+                />
+              </td>
+              <td>
+                // //
+              </td>
+              <td>
+                <button
+                  @click="this.order.ticketList.splice(idx, 1)"
+                  v-if="this.order.ticketList.length > 1"
+                >
+                  -
+                </button>
+              </td>
+            </tr>
+          </table>
+          <button @click="this.order.ticketList.push(this.createTicket())">
+            +
+          </button>
         </div>
 
         <div class="modal-footer">
@@ -33,6 +75,7 @@
             type="button"
             @click="
               this.$parent.Book(idFlight, this.order);
+              this.order = this.createDefault();
               this.$emit('close');
             "
             class="btn btn-info"
@@ -55,20 +98,7 @@ import { UserType } from "../models/usertype";
 
 export default class BookModal extends Vue {
   @Prop() public idFlight?: any;
-  order: Order = {
-    user: {
-      name: "",
-    },
-    nbBought: 0,
-    ticketList: new Array<Ticket>(this.createTicket()),
-    totalBasePrice: 0,
-    totalAdditionalPrice: 0,
-    totalDiscountedBasePrice: 0,
-    totalPrice: 0,
-    usedCurrency: Currency.EUR,
-    exchangeRate: 0,
-    isPaid: false,
-  };
+  order: Order = this.createDefault();
 
   userTypeEnum = UserType;
 
@@ -86,6 +116,23 @@ export default class BookModal extends Vue {
     };
 
     return ticket;
+  }
+
+  createDefault(): Order {
+    return {
+      user: {
+        name: "",
+      },
+      nbBought: 0,
+      ticketList: new Array<Ticket>(this.createTicket()),
+      totalBasePrice: 0,
+      totalAdditionalPrice: 0,
+      totalDiscountedBasePrice: 0,
+      totalPrice: 0,
+      usedCurrency: Currency.EUR,
+      exchangeRate: 0,
+      isPaid: false,
+    };
   }
 
   close() {
@@ -113,7 +160,7 @@ export default class BookModal extends Vue {
 }
 
 .modal-container {
-  width: 300px;
+  width: 80%;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -125,5 +172,13 @@ export default class BookModal extends Vue {
 
 .modal-body {
   color: red;
+}
+
+.ticket-list {
+  width: 100%;
+  margin-bottom: 15px;
+}
+.input-item {
+  margin: 5px;
 }
 </style>
