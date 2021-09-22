@@ -7,6 +7,8 @@ namespace super_duper_octo_palm_tree.app.Repositories.DdContracts
 {
     public class TicketData
     {
+        public string IdOrder { get; set; }
+
         private uint _additionalLuggage;
         private uint _basePriceDiscount;
 
@@ -15,7 +17,6 @@ namespace super_duper_octo_palm_tree.app.Repositories.DdContracts
             _additionalLuggage = 0;
         }
 
-        public string IdOrder { get; set; }
         public uint NbAdditionalLuggage
         {
             get { return _additionalLuggage; }
@@ -32,7 +33,6 @@ namespace super_duper_octo_palm_tree.app.Repositories.DdContracts
         public string UserType { get; set; }
         public double BasePrice { get; set; }
         public double AdditionalPrice { get; set; }
-        public double PaidTotal { get { return DiscountedBasePrice + AdditionalPrice; } }
         public uint BasePriceDiscount
         {
             get
@@ -47,6 +47,5 @@ namespace super_duper_octo_palm_tree.app.Repositories.DdContracts
             }
         }
 
-        public double DiscountedBasePrice { get { return BasePrice * (100 - BasePriceDiscount) / 100; } }
     }
 }

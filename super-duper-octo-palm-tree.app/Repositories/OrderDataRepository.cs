@@ -1,4 +1,5 @@
 ﻿using super_duper_octo_palm_tree.app.Repositories.DdContracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,6 +13,14 @@ namespace super_duper_octo_palm_tree.app.Repositories
         public static void InitializeData()
         {
             OrderDatas = new List<OrderData>();
+        }
+        public static string CreateOrder(OrderData order, string idFlight)
+        {
+            var idOrder = Guid.NewGuid().ToString();
+            order.IdOrder = idOrder;
+            order.IdFlight = idFlight;
+            OrderDatas.Add(order);
+            return idOrder;
         }
     }
 }

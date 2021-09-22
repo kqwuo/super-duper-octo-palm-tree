@@ -19,7 +19,12 @@ namespace super_duper_octo_palm_tree.app.Repositories
         }
 
         public static List<FlightData> GetFlights() => FlightDatas;
-        public static List<FlightData> GetFlight(string idFlight) => FlightDatas.Where(x=> x.IdFlight == idFlight).ToList();
+        public static List<FlightData> GetFlight(string idFlight) => FlightDatas.Where(x => x.IdFlight == idFlight).ToList();
+
+        public static void UpdateFlight(FlightData flightData)
+        {
+            FlightDatas[FlightDatas.FindIndex(x => x.IdFlight == flightData.IdFlight)] = flightData;
+        }
 
     }
 }

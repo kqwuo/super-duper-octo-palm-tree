@@ -8,11 +8,18 @@ namespace super_duper_octo_palm_tree.app.Repositories
 {
     public static class TicketDataRepository
     {
-        public static List<TicketData> TicketsDatas { private get; set; }
-        public static List<TicketData> GetTickets() => TicketsDatas;
+        public static List<TicketData> TicketsData { private get; set; }
+        public static List<TicketData> GetTickets() => TicketsData;
         public static void InitializeData()
         {
-            TicketsDatas = new List<TicketData>();
+            TicketsData = new List<TicketData>();
+        }
+
+        public static void SaveTicket(TicketData ticket) => TicketsData.Add(ticket);
+        public static void CreateTicket(TicketData ticket, string idOrder)
+        {
+            ticket.IdOrder = idOrder;
+            TicketsData.Add(ticket);
         }
     }
 }

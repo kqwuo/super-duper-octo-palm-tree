@@ -1,4 +1,5 @@
 ﻿using super_duper_octo_palm_tree.app.models;
+using super_duper_octo_palm_tree.app.Repositories.DdContracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,5 +46,44 @@ namespace super_duper_octo_palm_tree.app.Repositories
                                             }
                                            ).ToList();
         }
+
+        public static OrderData OrderToOrderData(Order order)
+        {
+            return new OrderData
+            {
+                ExchangeRate = order.ExchangeRate,
+                IsPaid = order.IsPaid,
+                UsedCurrency = Enum.GetName(order.UsedCurrency),
+                User = order.User.Name
+            };
+        }
+        public static TicketData TicketToTicketData(Ticket ticket)
+        {
+            return new TicketData
+            {
+                AdditionalPrice = ticket.AdditionalPrice,
+                BasePrice = ticket.BasePrice,
+                UserType = Enum.GetName(ticket.UserType),
+                BasePriceDiscount = ticket.BasePriceDiscount,
+                FirstName = ticket.FirstName,
+                LastName = ticket.LastName,
+                NbAdditionalLuggage = ticket.NbAdditionalLuggage,
+            };
+        }
+
+        public static FlightData FlightToFlightData(Flight flight)
+        {
+            return new FlightData
+            {
+                IdFlight = flight.IdFlight,
+                DeparturePlace = Enum.GetName(flight.DeparturePlace),
+                AdditionalLuggagePrice = flight.AdditionalLuggagePrice,
+                ArrivalPlace = Enum.GetName(flight.ArrivalPlace),
+                AvailableSeats = flight.AvailableSeats,
+                BasePrice = flight.BasePrice
+                
+            };
+        }
+
     }
 }
