@@ -41,7 +41,15 @@
         </tbody>
     </table>
 
-    <BookModal
+    <!--<BookModal
+      v-if="isModalVisible"
+      v-show="isModalVisible"
+      :flight="selectedFlight"
+      :currency="currency"
+      @close="closeModal"
+    />-->
+
+    <ExternalBookModal
       v-if="isModalVisible"
       v-show="isModalVisible"
       :flight="selectedFlight"
@@ -55,13 +63,14 @@
 import { Vue, Options } from 'vue-class-component';
 import axios from "axios"
 import BookModal from './BookModal.vue';
+import ExternalBookModal from './ExternalBookModal.vue';
 import { Flight } from "../models/flight";
-import { Order } from '../models/order';
 import { Currency, CurrencySymbol, CurrencyType } from "../models/currency";
 
 @Options({
   components: {
     BookModal,
+    ExternalBookModal
   },
 })
 export default class AllFlights extends Vue {
@@ -114,6 +123,12 @@ export default class AllFlights extends Vue {
     }
   }
 
+  async reloadFlight(idFlight: string) {
+    const bookedFlightResponse : Flight = (await axios.get<Flight>('http://localhost:5000/api/flight/getFlight/'+idFlight)).data
+    const idxFlight = this.allFlights.findIndex(flight => flight.idFlight === bookedFlightResponse.idFlight)
+    this.allFlights.splice(idxFlight, 1, bookedFlightResponse)
+  }
+
   getValueCurrencies(type: CurrencyType) {
     return CurrencyType[type];
   }
@@ -122,17 +137,6 @@ export default class AllFlights extends Vue {
     return Object.keys(enumme)
       .filter((value: string) => !isNaN(Number(value)))
       .map((key) => enumme[key]);
-  }
-
-  async Book(idFlight: string, order: Order) {
-    console.log(order);
-    var isSuccess = await axios.post<boolean>('http://localhost:5000/api/order/' + idFlight, order)
-
-    if (isSuccess){
-      const bookedFlightResponse : Flight = (await axios.get<Flight>('http://localhost:5000/api/flight/getFlight/'+idFlight)).data
-      const idxFlight = this.allFlights.findIndex(flight => flight.idFlight === bookedFlightResponse.idFlight)
-      this.allFlights.splice(idxFlight, 1, bookedFlightResponse)
-    }
   }
 
   showModal(flight: Flight) {

@@ -16,7 +16,11 @@
               <th>Nom</th>
               <th>Prénom</th>
               <th>Type</th>
+              <th>Nationalité</th>
               <th>Baggages supplémentaires</th>
+              <th>Première classe</th>
+              <th>Champagne</th>
+              <th>Accès à la loge</th>
               <th>Prix</th>
               <th></th>
             </tr>
@@ -42,6 +46,16 @@
                 </select>
               </td>
               <td>
+                <select v-model="ticket.nationality">
+                  <option > <!-- :value="this.nationalityType.french" -->
+                    <p>Française</p>
+                  </option>
+                  <option > <!-- :value="this.nationalityType.other" -->
+                    <p>Autre</p>
+                  </option>
+                </select>
+              </td>
+              <td>
                 <input
                   type="number"
                   v-model="ticket.nbAdditionalLuggage"
@@ -49,6 +63,30 @@
                   min="0"
                   max="3"
                 />
+              </td>
+              <td>
+                <input
+                  type="checkbox"
+                  v-model="ticket.firstClass"
+                  true-value="yes"
+                  false-value="no"
+                >
+              </td>
+              <td>
+                <input
+                  type="checkbox"
+                  v-model="ticket.champagneOnBoard"
+                  true-value="yes"
+                  false-value="no"
+                >
+              </td>
+              <td>
+                <input
+                  type="checkbox"
+                  v-model="ticket.loungeAccess"
+                  true-value="yes"
+                  false-value="no"
+                >
               </td>
               <td>
                 {{
@@ -107,7 +145,7 @@ import { Order } from "../models/order";
 import { Ticket } from "../models/ticket";
 import { UserType } from "../models/usertype";
 
-export default class BookModal extends Vue {
+export default class ExternalBookModal extends Vue {
   @Prop() public flight?: Flight;
   @Prop() public currency?: Currency;
   order: Order = this.createDefault();
@@ -230,7 +268,7 @@ export default class BookModal extends Vue {
 }
 
 .modal-body {
-  color: red;
+  color: grey;
 }
 
 .ticket-list {

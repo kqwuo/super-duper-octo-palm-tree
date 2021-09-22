@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
+    "noUnusedLocals": false,
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
