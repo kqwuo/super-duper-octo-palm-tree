@@ -10,6 +10,7 @@ namespace super_duper_octo_palm_tree.app.models
             //IdFlight = Guid.NewGuid();
             Orders = new List<Order>();
             AdditionalLuggagePrice = 100;
+            FlightSource = FlightSource.Internal;
             //OrderQueue = new Queue<Order>();
         }
 
@@ -28,7 +29,11 @@ namespace super_duper_octo_palm_tree.app.models
         public int AvailableSeats { get; set; }
 
         public List<Order> Orders { get; set; }
+
         public IEnumerable<FlightOptions> FlightOptions { get; set; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public FlightSource FlightSource { get; set; }
 
         //public Queue<Order> OrderQueue { get; }
     }
