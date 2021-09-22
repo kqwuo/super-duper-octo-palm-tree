@@ -57,9 +57,9 @@ namespace super_duper_octo_palm_tree.app.External.Services
                 FlightOptions = x.flight.flightOptions.Select(x =>
                 {
                     return new FlightOptions { OptionType = Enum.Parse<OptionType>(x.option_type), Price = x.price };
-                    
-                })
+                }),
+                FlightSource = FlightSource.External
             });
         }
-}
+    }
 }
