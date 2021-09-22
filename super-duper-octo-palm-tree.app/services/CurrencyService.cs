@@ -34,7 +34,7 @@ namespace super_duper_octo_palm_tree.app.services
                 {
                     // poll xml
                     var request = new HttpRequestMessage(HttpMethod.Get, "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
-                    request.Headers.Add(HttpRequestHeader.Accept.ToString(), "*/*");
+                    request.Headers.Add(HttpRequestHeader.Accept.ToString(), "text/xml");
                     var response = await _httpClient.SendAsync(request);
                     //parse xml
                     if (response.IsSuccessStatusCode)
