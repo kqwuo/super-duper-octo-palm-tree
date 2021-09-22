@@ -19,7 +19,7 @@ namespace super_duper_octo_palm_tree.app.services
 
         public async Task<List<Flight>> GetFlightsAsync()
         {
-            var ownFlights = flightservice.GetFlights;
+            var ownFlights = flightservice.GetFlights();
             var externalFlights = await externalDataService.GetFlightAsync();
 
             var returnFlights = ownFlights.ToList();

@@ -24,11 +24,11 @@ namespace super_duper_octo_palm_tree.app.controllers
             return Ok(await commonFlightService.GetFlightsAsync());
         }
 
-        [HttpGet("getFlight/{idRoute}")]
-        public async Task<IActionResult> GetBookedRoute(string idRoute)
-        {
-            return Ok(_flightService.GetFlight(idRoute));
-        }
+        //[HttpGet("getFlight/{idRoute}")]
+        //public async Task<IActionResult> GetBookedRoute(string idRoute)
+        //{
+        //    return Ok(_flightService.GetFlight(idRoute));
+        //}
 
     }
 }
