@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace super_duper_octo_palm_tree.app.models.external
+namespace super_duper_octo_palm_tree.app.External.Models
 {
     public class ExternalFlight
     {

@@ -17,7 +17,7 @@ namespace super_duper_octo_palm_tree.app.services
         {
             try
             {
-                var flightToGet = _routeService.GetFlights().Find(x => x.IdFlight == idRoute);
+                var flightToGet = _routeService.GetFlight(idRoute);
 
                 if (flightToGet == null)
                     return false;

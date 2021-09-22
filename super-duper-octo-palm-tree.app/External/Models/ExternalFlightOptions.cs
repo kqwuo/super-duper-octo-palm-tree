@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace super_duper_octo_palm_tree.app.models.external
+namespace super_duper_octo_palm_tree.app.External.Models
 {
     public class ExternalFlightOptions
     {

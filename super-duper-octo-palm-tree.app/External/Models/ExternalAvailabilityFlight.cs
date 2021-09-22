@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace super_duper_octo_palm_tree.app.models.external
+namespace super_duper_octo_palm_tree.app.External.Models
 {
     public class ExternalAvailabilityFlight
     {
-        [JsonPropertyName("availability")]
         public int availability { get; set; }
         public ExternalFlight flight { get; set; }
     }
