@@ -1,4 +1,5 @@
-﻿using super_duper_octo_palm_tree.app.models;
+﻿using super_duper_octo_palm_tree.app.External.Services;
+using super_duper_octo_palm_tree.app.models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace super_duper_octo_palm_tree.app.services
 
         public async Task<List<Flight>> GetFlightsAsync()
         {
-            var ownFlights = flightservice.GetFlights;
+            var ownFlights = flightservice.GetFlights();
             var externalFlights = await externalDataService.GetFlightAsync();
 
             var returnFlights = ownFlights.ToList();

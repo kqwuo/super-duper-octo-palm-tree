@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using super_duper_octo_palm_tree.app.External.Services;
 using super_duper_octo_palm_tree.app.services;
 using System;
 using System.Collections.Generic;

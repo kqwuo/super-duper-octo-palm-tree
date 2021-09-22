@@ -1,5 +1,5 @@
-﻿using super_duper_octo_palm_tree.app.models;
-using super_duper_octo_palm_tree.app.models.external;
+﻿using super_duper_octo_palm_tree.app.External.Models;
+using super_duper_octo_palm_tree.app.models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace super_duper_octo_palm_tree.app.services
+namespace super_duper_octo_palm_tree.app.External.Services
 {
     public class ExternalDataService
     {

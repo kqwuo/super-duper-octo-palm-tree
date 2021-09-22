@@ -5,18 +5,9 @@ namespace super_duper_octo_palm_tree.app.models
 {
     public class Flight
     {
-        public Flight()
-        {
-            //IdFlight = Guid.NewGuid();
-            Orders = new List<Order>();
-            AdditionalLuggagePrice = 100;
-            //OrderQueue = new Queue<Order>();
-        }
-
+        private double DefaultAdditionalLuggagePrice => 100;
         public string IdFlight { get; set; }
-
         public double BasePrice { get; set; }
-
         public double AdditionalLuggagePrice { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -24,12 +15,8 @@ namespace super_duper_octo_palm_tree.app.models
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Airport ArrivalPlace { get; set; }
-
         public int AvailableSeats { get; set; }
-
         public List<Order> Orders { get; set; }
         public IEnumerable<FlightOptions> FlightOptions { get; set; }
-
-        //public Queue<Order> OrderQueue { get; }
     }
 }
