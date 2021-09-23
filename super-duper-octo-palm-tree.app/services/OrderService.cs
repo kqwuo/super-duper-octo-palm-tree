@@ -33,7 +33,6 @@ namespace super_duper_octo_palm_tree.app.services
                     foreach (Ticket ticket in order.TicketList)
                     {
                         ticket.BasePrice = flightToGet.BasePrice;
-                        ticket.AdditionalPrice = flightToGet.AdditionalLuggagePrice * ticket.NbAdditionalLuggage;
                         ticket.BasePriceDiscount = (uint)(isFamily ? 10 : 0);
                         TicketDataRepository.CreateTicket(Mapper.TicketToTicketData(ticket), idOrder);
                     }

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -45,54 +46,86 @@ namespace super_duper_octo_palm_tree.app.External.Services
 
         public async Task BookFlightAsync(Order order)
         {
+            ExternalFlight externalFlight = JsonSerializer.Deserialize<ExternalFlight>(order.ExtraData.ToString());
             foreach( Ticket ticket in order.TicketList )
             {
-                ExternalTicket externalTicket = MapInternalTicketToExternalTicket(ticket, order.Flight);
+                try
+                {
+                    ExternalTicket externalTicket = MapInternalTicketToExternalTicket(ticket, externalFlight);
 
-                var request = new HttpRequestMessage(HttpMethod.Post, $@"https://api-6yfe7nq4sq-uc.a.run.app/book");
-                request.Content = new StringContent(JsonSerializer.Serialize(externalTicket));
-                var response = await _httpClient.SendAsync(request);
+                    var content = JsonSerializer.Serialize(externalTicket);
+                    var response = await _httpClient.PostAsync(
+                        "https://api-6yfe7nq4sq-uc.a.run.app/book",
+                        new StringContent(content, Encoding.UTF8, "application/json")
+                    );
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var resString = response.Content.ReadAsStringAsync();
+                        Console.WriteLine("Ok");
+                    }
+                }
+                catch( Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
         }
 
         public IEnumerable<Flight> MapExternalToInternalModel(IEnumerable<ExternalAvailabilityFlight> externalAvailabilityFlights)
         {
-            return externalAvailabilityFlights.Select(externalFlight => new Flight
+            return externalAvailabilityFlights.Select(eaFlight =>
             {
-                AdditionalLuggagePrice = 0,
-                ArrivalPlace = Enum.Parse<Airport>(externalFlight.flight.arrival),
-                DeparturePlace = Enum.Parse<Airport>(externalFlight.flight.departure),
-                BasePrice = externalFlight.flight.base_price,
-                IdFlight = externalFlight.flight.code,
-                Orders = new List<Order>(),
-                AvailableSeats = externalFlight.availability,
-                FlightOptions = externalFlight.flight.flightOptions.Select(x =>
+                var flight = new Flight
                 {
-                    return new FlightOptions { OptionType = Enum.Parse<OptionType>(x.option_type), Price = x.price };
-                }),
-                FlightSource = FlightSource.External,
-                ExtraData = externalFlight
+                    ArrivalPlace = Enum.Parse<Airport>(eaFlight.flight.arrival),
+                    DeparturePlace = Enum.Parse<Airport>(eaFlight.flight.departure),
+                    BasePrice = eaFlight.flight.base_price,
+                    IdFlight = eaFlight.flight.code,
+                    Orders = new List<Order>(),
+                    AvailableSeats = eaFlight.availability,
+                    Options = eaFlight.flight.flightOptions.Select(x =>
+                    {
+                        return new FlightOptions { FieldName = x.option_type, Price = x.price, ReturnType = "bool", Value = false };
+                    }).ToList(),
+                    AdditionalFields = new List<AdditionalField>(),
+                    FlightSource = FlightSource.External,
+                    ExtraData = eaFlight.flight
+                };
+                flight.AdditionalFields.Add(new AdditionalField { Label = "Nationalité", FieldName = "customer_nationality", ReturnType = "string", Value = "" });
+                return flight;
             });
         }
 
-        public ExternalTicket MapInternalTicketToExternalTicket( Ticket ticket, Flight flight )
+        public ExternalTicket MapInternalTicketToExternalTicket( Ticket ticket, ExternalFlight externalFlight )
         {
             var result = new ExternalTicket()
             {
-                flight = flight.ExtraData as ExternalFlight,
-                date = "04-03-2022",
+                flight = externalFlight,
+                date = DateTime.UtcNow.ToString("dd-MM-yyyy", DateTimeFormatInfo.InvariantInfo),
                 payed_price = Convert.ToInt32(ticket.PaidTotal),
                 customer_name = $"${ticket.LastName} ${ticket.FirstName}",
-                customer_nationality = ticket.Nationality
+                booking_source = "oui"
             };
 
             if (ticket.Options.Count() > 0)
-                result.options = new List<FlightOptions>();
+                result.options = new List<ExternalFlightOptions>();
 
             foreach( FlightOptions option in ticket.Options )
             {
-                result.options.Add(option);
+                if (((JsonElement)option.Value).GetBoolean())
+                {
+                    ExternalFlightOptions externalOptions = new ExternalFlightOptions()
+                    {
+                        option_type = option.FieldName,
+                        price = Convert.ToInt32(option.Price)
+                    };
+                    result.options.Add(externalOptions);
+                }
             }
+
+            var af = ticket.AdditionalFields.Find(af => af.FieldName == "customer_nationality");
+            result.customer_nationality = ((JsonElement)af.Value).GetString();
+
             return result;
         }
     }

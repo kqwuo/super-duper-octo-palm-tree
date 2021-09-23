@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace super_duper_octo_palm_tree.app.models
 {
@@ -40,7 +41,7 @@ namespace super_duper_octo_palm_tree.app.models
             }
         }
 
-        //[JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public Currency UsedCurrency { get; set; }
 
         public double ExchangeRate { get; set; }
@@ -49,6 +50,9 @@ namespace super_duper_octo_palm_tree.app.models
 
         public Flight Flight { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public FlightSource FlightSource { get; set; }
+
+        public object ExtraData { get; set; }
     }
 }
