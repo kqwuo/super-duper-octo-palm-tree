@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 
 namespace super_duper_octo_palm_tree.app.models
 {
@@ -47,5 +46,9 @@ namespace super_duper_octo_palm_tree.app.models
         public double ExchangeRate { get; set; }
 
         public bool IsPaid { get; set; }
+
+        public Flight Flight { get; set; }
+
+        public FlightSource FlightSource { get; set; }
     }
 }

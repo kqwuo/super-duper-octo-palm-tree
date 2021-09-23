@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace super_duper_octo_palm_tree.app.models
 {
@@ -25,6 +26,8 @@ namespace super_duper_octo_palm_tree.app.models
 
         public string LastName { get; set; }
 
+        public string Nationality { get; set; }
+
         public UserType UserType { get; set; }
 
         public double BasePrice { get; set; }
@@ -47,5 +50,7 @@ namespace super_duper_octo_palm_tree.app.models
         }
 
         public double DiscountedBasePrice { get { return BasePrice * (100 - BasePriceDiscount) / 100; } }
+
+        public IEnumerable<FlightOptions> Options { get; set; }
     }
 }

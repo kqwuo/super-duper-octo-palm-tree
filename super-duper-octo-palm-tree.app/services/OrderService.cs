@@ -7,17 +7,17 @@ namespace super_duper_octo_palm_tree.app.services
 {
     public class OrderService
     {
-        private FlightService _routeService;
-        public OrderService(FlightService routeService)
+        private FlightService _flightService;
+        public OrderService(FlightService flightService)
         {
-            _routeService = routeService;
+            _flightService = flightService;
         }
 
         public bool OrderTicket(Order order, string idRoute)
         {
             try
             {
-                var flightToGet = _routeService.GetFlight(idRoute);
+                var flightToGet = _flightService.GetFlight(idRoute);
 
                 if (flightToGet == null)
                     return false;

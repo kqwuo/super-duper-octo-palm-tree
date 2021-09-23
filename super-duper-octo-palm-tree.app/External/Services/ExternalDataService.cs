@@ -43,23 +43,57 @@ namespace super_duper_octo_palm_tree.app.External.Services
             return MapExternalToInternalModel(externalFlights);
         }
 
+        public async Task BookFlightAsync(Order order)
+        {
+            foreach( Ticket ticket in order.TicketList )
+            {
+                ExternalTicket externalTicket = MapInternalTicketToExternalTicket(ticket, order.Flight);
+
+                var request = new HttpRequestMessage(HttpMethod.Post, $@"https://api-6yfe7nq4sq-uc.a.run.app/book");
+                request.Content = new StringContent(JsonSerializer.Serialize(externalTicket));
+                var response = await _httpClient.SendAsync(request);
+            }
+        }
+
         public IEnumerable<Flight> MapExternalToInternalModel(IEnumerable<ExternalAvailabilityFlight> externalAvailabilityFlights)
         {
-            return externalAvailabilityFlights.Select(x => new Flight
+            return externalAvailabilityFlights.Select(externalFlight => new Flight
             {
                 AdditionalLuggagePrice = 0,
-                ArrivalPlace = Enum.Parse<Airport>(x.flight.arrival),
-                DeparturePlace = Enum.Parse<Airport>(x.flight.departure),
-                BasePrice = x.flight.base_price,
-                IdFlight = x.flight.code,
+                ArrivalPlace = Enum.Parse<Airport>(externalFlight.flight.arrival),
+                DeparturePlace = Enum.Parse<Airport>(externalFlight.flight.departure),
+                BasePrice = externalFlight.flight.base_price,
+                IdFlight = externalFlight.flight.code,
                 Orders = new List<Order>(),
-                AvailableSeats = x.availability,
-                FlightOptions = x.flight.flightOptions.Select(x =>
+                AvailableSeats = externalFlight.availability,
+                FlightOptions = externalFlight.flight.flightOptions.Select(x =>
                 {
                     return new FlightOptions { OptionType = Enum.Parse<OptionType>(x.option_type), Price = x.price };
                 }),
-                FlightSource = FlightSource.External
+                FlightSource = FlightSource.External,
+                ExtraData = externalFlight
             });
+        }
+
+        public ExternalTicket MapInternalTicketToExternalTicket( Ticket ticket, Flight flight )
+        {
+            var result = new ExternalTicket()
+            {
+                flight = flight.ExtraData as ExternalFlight,
+                date = "04-03-2022",
+                payed_price = Convert.ToInt32(ticket.PaidTotal),
+                customer_name = $"${ticket.LastName} ${ticket.FirstName}",
+                customer_nationality = ticket.Nationality
+            };
+
+            if (ticket.Options.Count() > 0)
+                result.options = new List<FlightOptions>();
+
+            foreach( FlightOptions option in ticket.Options )
+            {
+                result.options.Add(option);
+            }
+            return result;
         }
     }
 }

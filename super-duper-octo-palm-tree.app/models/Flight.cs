@@ -27,6 +27,8 @@ namespace super_duper_octo_palm_tree.app.models
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public FlightSource FlightSource { get; set; }
 
+        public object ExtraData { get; set; }
+
         //public Queue<Order> OrderQueue { get; }
     }
 }
