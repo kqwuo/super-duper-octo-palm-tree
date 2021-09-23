@@ -3,6 +3,7 @@
     public enum FlightSource
     {
         Internal,
-        External
+        External,
+        Hichem
     }
 }

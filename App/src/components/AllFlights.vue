@@ -22,9 +22,9 @@
                 <th>Departure</th>
                 <th>Arrival</th>
                 <th>Price</th>
-                <th>Additional luggage price</th>
                 <th>Reservation</th>
                 <th>Tickets number</th>
+                <th>Reserver par</th>
             </tr>
         </thead>
         <tbody>
@@ -34,9 +34,9 @@
                 <td>?</td>
                 <td>?</td>
                 <td>{{ (flight.basePrice * currencyRate).toFixed(2) }} &nbsp; {{ symbolCurrency }}</td>
-                <td>{{ flight.additionalLuggagePrice }}</td>
                 <td><button type="button" @click="showModal(flight)" class="btn btn-info">Book</button></td> <!-- Book(flight.idRoute) -->
                 <td>{{ flight.availableSeats }}</td>
+                <td>{{flight.flightSource}}</td>
             </tr>
         </tbody>
     </table>
