@@ -1,9 +1,17 @@
-﻿namespace super_duper_octo_palm_tree.app.models
+﻿using System.Text.Json.Serialization;
+
+namespace super_duper_octo_palm_tree.app.models
 {
     public class FlightOptions
     {
-        public int Price { get; set; }
+        public string FieldName { get; set; }
 
-        public OptionType OptionType { get; set; }
+        public string Label { get; set; }
+
+        public string ReturnType { get; set; }
+
+        public object Value { get; set; }
+
+        public double Price { get; set; }
     }
 }

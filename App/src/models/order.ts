@@ -1,6 +1,7 @@
 import { Ticket } from "./ticket";
 import { User } from "./user";
 import { Currency, CurrencyType } from "./currency";
+import { FlightSource } from "./flightSource.enum";
 
 export interface Order {
   user: User
@@ -13,4 +14,6 @@ export interface Order {
   usedCurrency: CurrencyType
   exchangeRate: number
   isPaid: boolean
+  flightSource: FlightSource;
+  extraData?: any;
 }
