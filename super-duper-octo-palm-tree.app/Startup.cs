@@ -31,6 +31,7 @@ namespace super_duper_octo_palm_tree.app
             services.AddSingleton<CommonFlightService>();
             services.AddHostedService<CurrencyService>();
 
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder.WithOrigins("http://localhost:8080").AllowAnyMethod().AllowAnyHeader());
