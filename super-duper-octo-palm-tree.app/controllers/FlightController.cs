@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace super_duper_octo_palm_tree.app.controllers
 {
-    [Route( "/api/flight" )]
+    [Route("/api/flight")]
     public class FlightController : ControllerBase
     {
         FlightService _flightService;
@@ -19,9 +19,9 @@ namespace super_duper_octo_palm_tree.app.controllers
         }
 
         [HttpGet("getAllFlights")]
-        public async Task<IActionResult> GetAllFlights([FromQuery] Currency currency = Currency.EUR)
+        public async Task<IActionResult> GetAllFlights([FromQuery] string date, [FromQuery] Currency currency = Currency.EUR)
         {
-            return Ok(await commonFlightService.GetFlightsAsync());
+            return Ok(await commonFlightService.GetFlightsAsync(date));
         }
 
         [HttpGet("getFlight/{idRoute}")]
