@@ -28,8 +28,8 @@ namespace super_duper_octo_palm_tree.app.services
         {
             var flight = new List<Flight>();
             DateTime date = DateTime.Parse(dateString);
-            var ownFlights = flightservice.GetFlights();
-            var externalFlights = await externalDataService.GetFlightAsync();
+            var ownFlights = flightservice.GetFlights(date);
+            var externalFlights = await externalDataService.GetFlightAsync(date);
             var hichemFlights = await hichemDataService.GetFlightAsync();
 
             if (ownFlights.Count() > 0) flight.AddRange(ownFlights);
