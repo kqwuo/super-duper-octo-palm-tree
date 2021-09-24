@@ -37,6 +37,7 @@ namespace super_duper_octo_palm_tree.app
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder.WithOrigins("http://localhost:8080").AllowAnyMethod().AllowAnyHeader());
+                options.AddPolicy("CorsPolicy", builder => builder.WithOrigins("http://10.10.10.163:8080").AllowAnyMethod().AllowAnyHeader());
             });
 
             services.AddControllers();

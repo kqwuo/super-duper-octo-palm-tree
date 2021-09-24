@@ -4,6 +4,7 @@
     {
         Internal,
         External,
-        Hichem
+        Hichem,
+        ABA
     }
 }
