@@ -18,10 +18,11 @@ namespace super_duper_octo_palm_tree.app.services
             this.externalDataService = externalDataService;
         }
 
-        public async Task<List<Flight>> GetFlightsAsync()
+        public async Task<List<Flight>> GetFlightsAsync(string dateString)
         {
-            var ownFlights = flightservice.GetFlights();
-            var externalFlights = await externalDataService.GetFlightAsync();
+            DateTime date = DateTime.Parse(dateString);
+            var ownFlights = flightservice.GetFlights(date);
+            var externalFlights = await externalDataService.GetFlightAsync(date);
 
             var returnFlights = ownFlights.ToList();
             if (externalFlights.Count() > 0) returnFlights.AddRange(externalFlights);
