@@ -112,6 +112,7 @@ import { UserType } from "../models/usertype";
 export default class BookModal extends Vue {
   @Prop() public flight?: Flight;
   @Prop() public currency?: Currency;
+  @Prop() public date?: string;
   order: Order = this.createDefault();
 
   public errorMessage: string = "";
@@ -212,6 +213,7 @@ export default class BookModal extends Vue {
       const parent: any = this.$parent;
       this.order.flightSource = this.flight!.flightSource;
       this.order.extraData = this.flight!.extraData;
+      this.order.date = this.date!;
       parent.Book(this.flight!.idFlight, this.order);
       this.order = this.createDefault();
       this.$emit("close");

@@ -46,6 +46,7 @@
       v-show="isModalVisible"
       :flight="selectedFlight"
       :currency="currency"
+      :date="date"
       @close="closeModal"
     />
   </div>
