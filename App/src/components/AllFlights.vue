@@ -12,6 +12,10 @@
       </option>
     </select>
 
+    <br><br>
+
+    <input type="date" v-model="this.date">
+
     <br /><br /><br />
 
     <table class="table table-striped table-bordered">
@@ -19,8 +23,6 @@
             <tr>
                 <th>Name</th>
                 <th>Destination</th>
-                <th>Departure</th>
-                <th>Arrival</th>
                 <th>Price</th>
                 <th>Additional luggage price</th>
                 <th>Reservation</th>
@@ -31,8 +33,6 @@
             <tr v-for="flight in allFlights" :key="flight.idFlight">
                 <td>{{ flight.arrivalPlace }}</td>
                 <td>{{ flight.departurePlace }}</td>
-                <td>?</td>
-                <td>?</td>
                 <td>{{ (flight.basePrice * currencyRate).toFixed(2) }} &nbsp; {{ symbolCurrency }}</td>
                 <td>{{ flight.additionalLuggagePrice }}</td>
                 <td><button type="button" @click="showModal(flight)" class="btn btn-info">Book</button></td> <!-- Book(flight.idRoute) -->
@@ -74,9 +74,14 @@ export default class AllFlights extends Vue {
   public currency?: Currency;
   public idFlight : string = "";
   public selectedFlight: Flight | null = null;
+  public date: string = new Date().toISOString().split("T")[0];
 
   async mounted () {
-    this.allFlights = (await axios.get<Array<Flight>>('http://localhost:5000/api/flight/getAllFlights')).data;
+    this.allFlights = (await axios.get<Array<Flight>>('http://localhost:5000/api/flight/getAllFlights', {
+      params: {
+        date: this.date
+      }
+    })).data;
     const currencyType : string[] = this.ToArray(CurrencyType);
 
     this.allCurrencies = currencyType.map<Currency>((x : any, index) => {

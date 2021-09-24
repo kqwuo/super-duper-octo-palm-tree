@@ -77,6 +77,7 @@ namespace super_duper_octo_palm_tree.app.Repositories
             return new OrderData
             {
                 ExchangeRate = order.ExchangeRate,
+                Date = order.Date,
                 IsPaid = order.IsPaid,
                 UsedCurrency = Enum.GetName(order.UsedCurrency),
                 User = order.User.Name

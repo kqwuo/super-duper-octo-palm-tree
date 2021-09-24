@@ -12,7 +12,10 @@ namespace super_duper_octo_palm_tree.app.models
 
         public List<Ticket> TicketList { get; set; }
 
-        public double TotalBasePrice {
+        public string Date { get; set; }
+
+        public double TotalBasePrice
+        {
             get
             {
                 return TicketList.Sum(ticket => ticket.BasePrice);

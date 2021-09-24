@@ -151,6 +151,7 @@ export default class BookModal extends Vue {
       },
       nbBought: 0,
       ticketList: new Array<Ticket>(this.createTicket()),
+      date: "00-00-0000",
       totalBasePrice: 0,
       totalAdditionalPrice: 0,
       totalDiscountedBasePrice: 0,
