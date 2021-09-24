@@ -41,7 +41,7 @@ namespace super_duper_octo_palm_tree.app.Repositories
 
         public static void UpdateFlight(FlightData flightData)
         {
-            FlightDatas[FlightDatas.FindIndex(x => x.IdFlight == flightData.IdFlight)] = flightData;
+            FlightDatas[FlightDatas.FindIndex(x => x.IdFlight == flightData.IdFlight)].AvailableSeats = flightData.AvailableSeats;
         }
 
     }

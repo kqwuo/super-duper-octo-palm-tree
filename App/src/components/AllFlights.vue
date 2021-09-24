@@ -14,7 +14,9 @@
 
     <br><br>
 
-    <input type="date" v-model="this.date">
+    <input type="date" v-model="this.date" v-on:change="getFlights()">
+
+    <!-- <button @click="getFlights" -->
 
     <br /><br /><br />
 
@@ -78,11 +80,7 @@ export default class AllFlights extends Vue {
   public date: string = new Date().toISOString().split("T")[0];
 
   async mounted () {
-    this.allFlights = (await axios.get<Array<Flight>>('http://localhost:5000/api/flight/getAllFlights', {
-      params: {
-        date: this.date
-      }
-    })).data;
+    await this.getFlights();
     const currencyType : string[] = this.ToArray(CurrencyType);
 
     this.allCurrencies = currencyType.map<Currency>((x : any, index) => {
@@ -102,6 +100,14 @@ export default class AllFlights extends Vue {
     this.currency.rate = this.currencyRate;
 
   };
+
+  async getFlights(): Promise<void> {
+    this.allFlights = (await axios.get<Array<Flight>>('http://localhost:5000/api/flight/getAllFlights', {
+      params: {
+        date: this.date
+      }
+    })).data;
+  }
 
   async onChangeCurrency(event: any) {
 
