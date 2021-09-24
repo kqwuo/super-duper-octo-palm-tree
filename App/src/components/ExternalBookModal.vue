@@ -3,7 +3,7 @@
     <div class="modal-wrapper">
       <div class="modal-container">
         <div class="modal-body">
-          <span style="color:red; font-weight:bold">{{errorMessage}}</span>
+          <span style="color: red; font-weight: bold">{{ errorMessage }}</span>
           <div class="summary">
             Nom de l'acheteur :
             <input v-model="this.order.user.name" type="text" /> Prix total :
@@ -16,11 +16,9 @@
               <th>Nom</th>
               <th>Prénom</th>
               <th>Type</th>
-              <template v-if="flight.additionalFields">
-                <th v-for="field in flight.additionalFields" :key="field.fieldName">{{ field.label ?? field.fieldName }}</th>
-              </template>
-              <th>Options</th>
+              <th>Nationalité</th>
               <th>Prix</th>
+              <th>Options</th>
               <th></th>
             </tr>
             <tr
@@ -44,21 +42,46 @@
                   </option>
                 </select>
               </td>
-              <template v-if="flight.additionalFields">
-                <td v-for="field in ticket.additionalFields" :key="field.fieldName">
-                  <input v-model="field.value">
-                </td>
-              </template>
               <td>
-                <div v-for="option in ticket.options" :key="option.label">
-                  <i>{{option.Label ?? option.fieldName}}</i>
-                  <input @click="this.recalculate()" v-if="option.returnType == 'number'" type="number" min="0" v-model="option.value">
-                  <input @click="this.recalculate()" v-else-if="option.returnType == 'bool'" type="checkbox" v-model="option.value">
-                </div>
+                <select v-model="ticket.nationality">
+                  <option>
+                    <!-- :value="this.nationalityType.french" -->
+                    <p>Française</p>
+                  </option>
+                  <option>
+                    <!-- :value="this.nationalityType.other" -->
+                    <p>Autre</p>
+                  </option>
+                </select>
               </td>
               <td>
+                <input
+                  type="number"
+                  v-model="ticket.nbAdditionalLuggage"
+                  @click="recalculate()"
+                  min="0"
+                  max="3"
+                />
+              </td>
+              <span v-if="this.flight.flightOptions">
+                <div
+                  v-for="item in this.flight.flightOptions"
+                  :key="item.option"
+                >
+                  <td>
+                    {{ item.option }}
+                    <input type="checkbox" @click="" true-value="yes" false-value="no" />
+                  </td>
+                </div>
+              </span>
+              <td>
                 {{
-                  recalculateTicket(ticket)
+                  (
+                    (this.flight?.basePrice +
+                      this.flight?.additionalLuggagePrice *
+                        ticket.nbAdditionalLuggage) *
+                    (this.currency?.rate ?? 1)
+                  ).toFixed(2)
                 }}
                 {{ this.currency?.symbol }}
               </td>
@@ -83,13 +106,7 @@
           >
             Fermer
           </button>
-          <button
-            type="button"
-            @click="
-             validate()
-            "
-            class="btn btn-info"
-          >
+          <button type="button" @click="validate()" class="btn btn-info">
             Valider
           </button>
         </div>
@@ -99,47 +116,33 @@
 </template>
 
 <script lang="ts">
-import { Flight } from "@/models/flight";
-import { FlightSource } from "@/models/flightSource.enum";
+import { Flight } from "../models/flight";
+import axios from "axios";
 import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 import { Currency, CurrencyType } from "../models/currency";
 import { Order } from "../models/order";
-import { Ticket } from "../models/ticket";
+import { ExternalTicket, Ticket } from "../models/ticket";
 import { UserType } from "../models/usertype";
 
-export default class BookModal extends Vue {
+export default class ExternalBookModal extends Vue {
   @Prop() public flight?: Flight;
   @Prop() public currency?: Currency;
-  @Prop() public date?: string;
   order: Order = this.createDefault();
 
   public errorMessage: string = "";
 
   userTypeEnum = UserType;
 
-  createTicket(): Ticket {
-    const ticket: Ticket = {
-      firstName: "",
-      lastName: "",
-      userType: UserType.adult,
-      basePrice: 0,
-      paidTotal: 0,
-      basePriceDiscount: 0,
-      discountedBasePrice: 0,
+  createTicket(): ExternalTicket {
+    const ticket: ExternalTicket = {
+      flight:{},
+      customerName: "",
+      customerNationality: "",
+      date: "",
+      payedPrice: 0,
       options: [],
-      additionalFields: []
     };
-    if (this.flight) {
-      this.flight.options.forEach( o => {
-        ticket.options.push({ label: o.label, fieldName: o.fieldName, price: o.price, value: o.value, returnType: o.returnType});
-      });
-      if (this.flight.additionalFields)
-        this.flight.additionalFields.forEach( af => {
-          ticket.additionalFields.push({ label: af.label, fieldName: af.fieldName, value: af.value, returnType: af.returnType});
-        });
-      ticket.basePrice = this.flight.basePrice;
-    }
 
     return ticket;
   }
@@ -150,8 +153,7 @@ export default class BookModal extends Vue {
         name: "",
       },
       nbBought: 0,
-      ticketList: new Array<Ticket>(this.createTicket()),
-      date: "00-00-0000",
+      ticketList: new Array<ExternalTicket>(this.createTicket()),
       totalBasePrice: 0,
       totalAdditionalPrice: 0,
       totalDiscountedBasePrice: 0,
@@ -159,8 +161,20 @@ export default class BookModal extends Vue {
       usedCurrency: CurrencyType.EUR,
       exchangeRate: this.currency?.rate!,
       isPaid: false,
-      flightSource: FlightSource.internal
     };
+  }
+
+  async Book(idFlight: string, order: Order) {
+    console.log(order);
+    var isSuccess = await axios.post<boolean>(
+      "http://10.10.10.163:5000/api/order/" + idFlight,
+      order
+    );
+
+    if (isSuccess) {
+      const parent: any = this.$parent;
+      parent.reloadFlight(idFlight);
+    }
   }
 
   addTicket() {
@@ -168,31 +182,13 @@ export default class BookModal extends Vue {
     this.recalculate();
   }
 
-  recalculateTicket(ticket : Ticket){
-     let totalPrice = ticket.basePrice;
-      ticket.options.forEach( o => {
-          if (o.returnType == 'number')
-            totalPrice += o.value * o.price;
-          else if (o.returnType == 'bool' && o.value === true)
-            totalPrice += o.price;
-        });
-
-         totalPrice*=(this.currency?.rate ?? 1);
-        return(totalPrice.toFixed(2))
-  }
-
   recalculate() {
     let totalPrice = 0;
     this.order.ticketList.forEach(
-      (x) => {
-        totalPrice += this.flight!.basePrice;
-        x.options.forEach( o => {
-          if (o.returnType == 'number')
-            totalPrice += o.value * o.price;
-          else if (o.returnType == 'bool' && o.value === true)
-            totalPrice += o.price;
-        });
-      }
+      (x) =>
+        (totalPrice +=
+          this.flight!.basePrice +
+          this.flight!.additionalLuggagePrice * x.nbAdditionalLuggage)
     );
 
     return totalPrice;
@@ -206,14 +202,10 @@ export default class BookModal extends Vue {
     this.errorMessage = "";
     const ticket = this.order.ticketList.find(
       (x) => x.lastName === "" || x.firstName == ""
-    );  
+    );
 
     if (this.order.user.name && !ticket) {
-      const parent: any = this.$parent;
-      this.order.flightSource = this.flight!.flightSource;
-      this.order.extraData = this.flight!.extraData;
-      this.order.date = this.date!;
-      parent.Book(this.flight!.idFlight, this.order);
+      this.Book(this.flight!.idFlight, this.order);
       this.order = this.createDefault();
       this.$emit("close");
     } else {
@@ -254,7 +246,7 @@ export default class BookModal extends Vue {
 }
 
 .modal-body {
-  color: red;
+  color: grey;
 }
 
 .ticket-list {

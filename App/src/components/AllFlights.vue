@@ -26,9 +26,9 @@
                 <th>Name</th>
                 <th>Destination</th>
                 <th>Price</th>
-                <th>Additional luggage price</th>
                 <th>Reservation</th>
                 <th>Tickets number</th>
+                <th>Reserver par</th>
             </tr>
         </thead>
         <tbody>
@@ -36,9 +36,9 @@
                 <td>{{ flight.arrivalPlace }}</td>
                 <td>{{ flight.departurePlace }}</td>
                 <td>{{ (flight.basePrice * currencyRate).toFixed(2) }} &nbsp; {{ symbolCurrency }}</td>
-                <td>{{ flight.additionalLuggagePrice }}</td>
                 <td><button type="button" @click="showModal(flight)" class="btn btn-info">Book</button></td> <!-- Book(flight.idRoute) -->
                 <td>{{ flight.availableSeats }}</td>
+                <td>{{flight.flightSource}}</td>
             </tr>
         </tbody>
     </table>
@@ -93,7 +93,7 @@ export default class AllFlights extends Vue {
 
     this.currencyRate = (
       await axios.get<number>(
-        `http://localhost:5000/api/currency/${this.allCurrencies[0].type}`
+        `http://10.10.10.163:5000/api/currency/${this.allCurrencies[0].type}`
       )
     ).data;
 
@@ -115,7 +115,7 @@ export default class AllFlights extends Vue {
     if(newCurrency){
     this.currencyRate = (
       await axios.get<number>(
-        `http://localhost:5000/api/currency/${newCurrency.type}`
+        `http://10.10.10.163:5000/api/currency/${newCurrency.type}`
       )
     ).data;
 
@@ -138,10 +138,10 @@ export default class AllFlights extends Vue {
 
   async Book(idFlight: string, order: Order) {
     console.log(order);
-    var isSuccess = await axios.post<boolean>('http://localhost:5000/api/order/' + idFlight, order)
+    var isSuccess = await axios.post<boolean>('http://10.10.10.163:5000/api/order/' + idFlight, order)
 
     if (isSuccess){
-      const bookedFlightResponse : Flight = (await axios.get<Flight>('http://localhost:5000/api/flight/getFlight/'+idFlight)).data
+      const bookedFlightResponse : Flight = (await axios.get<Flight>('http://10.10.10.163:5000/api/flight/getFlight/'+idFlight)).data
       const idxFlight = this.allFlights.findIndex(flight => flight.idFlight === bookedFlightResponse.idFlight)
       this.allFlights.splice(idxFlight, 1, bookedFlightResponse)
     }

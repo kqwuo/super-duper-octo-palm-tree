@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using super_duper_octo_palm_tree.app.External.Services;
+using super_duper_octo_palm_tree.app.Hichem.Services;
 using super_duper_octo_palm_tree.app.services;
 using System;
 using System.Collections.Generic;
@@ -28,12 +29,15 @@ namespace super_duper_octo_palm_tree.app
             services.AddSingleton<OrderService>();
             services.AddSingleton<SharedCurrencyService>();
             services.AddSingleton<ExternalDataService>();
+            services.AddSingleton<HichemDataService>();
             services.AddSingleton<CommonFlightService>();
             services.AddHostedService<CurrencyService>();
+
 
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder.WithOrigins("http://localhost:8080").AllowAnyMethod().AllowAnyHeader());
+                options.AddPolicy("CorsPolicy", builder => builder.WithOrigins("http://10.10.10.163:8080").AllowAnyMethod().AllowAnyHeader());
             });
 
             services.AddControllers();

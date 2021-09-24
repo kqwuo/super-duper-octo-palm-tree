@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="controllers\Contracts\" />
+    <Folder Include="Hichem\Models\" />
   </ItemGroup>
 
 </Project>
