@@ -21,9 +21,9 @@ namespace super_duper_octo_palm_tree.app.External.Services
             _httpClient = new HttpClient();
         }
 
-        public async Task<IEnumerable<Flight>> GetFlightAsync()
+        public async Task<IEnumerable<Flight>> GetFlightAsync(DateTime date)
         {
-            var dateNow = DateTime.UtcNow.ToString("dd-MM-yyyy", DateTimeFormatInfo.InvariantInfo);
+            var dateNow = date.ToString("dd-MM-yyyy", DateTimeFormatInfo.InvariantInfo);
             var request = new HttpRequestMessage(HttpMethod.Get, $@"https://api-6yfe7nq4sq-uc.a.run.app/flights/{dateNow}");
             request.Headers.Add(HttpRequestHeader.Accept.ToString(), "application/json");
             var response = await _httpClient.SendAsync(request);
