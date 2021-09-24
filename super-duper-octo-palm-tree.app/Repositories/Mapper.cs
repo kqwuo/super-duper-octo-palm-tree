@@ -4,30 +4,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace super_duper_octo_palm_tree.app.Repositories
 {
     public static class Mapper
     {
 
-        public static List<Flight> GetFlights()
+        public static List<Flight> GetFlights(DateTime date)
         {
-            var flights = FlightDataRepository.GetFlights();
+            var flights = FlightDataRepository.GetFlights(date);
+            
+            return flights.Select(x => MapFlight(x)).ToList();
+        }
+
+        public static Flight FindFlight(string idRoute) => MapFlight(FlightDataRepository.GetFlight(idRoute));
+
+        public static Flight MapFlight( FlightData data )
+        {
             var orders = OrderDataRepository.GetOrders();
             var tickets = TicketDataRepository.GetTickets();
-
-            return flights.Select(x =>
+            var flight = new Flight
             {
-                var flight = new Flight
-                {
-                    IdFlight = x.IdFlight,
-                    ArrivalPlace = Enum.Parse<Airport>(x.ArrivalPlace),
-                    DeparturePlace = Enum.Parse<Airport>(x.DeparturePlace),
-                    AvailableSeats = x.AvailableSeats,
-                    BasePrice = x.BasePrice,
-                    Options = new List<FlightOptions>(),
-                    Orders = orders.Where(x => x.IdFlight == x.IdFlight)
+                IdFlight = data.IdFlight,
+                ArrivalPlace = Enum.Parse<Airport>(data.ArrivalPlace),
+                DeparturePlace = Enum.Parse<Airport>(data.DeparturePlace),
+                AvailableSeats = data.AvailableSeats,
+                BasePrice = data.BasePrice,
+                Options = new List<FlightOptions>(),
+                Orders = orders.Where(x => x.IdFlight == x.IdFlight)
                                    .Select(x => new Order
                                    {
                                        ExchangeRate = x.ExchangeRate,
@@ -56,17 +60,16 @@ namespace super_duper_octo_palm_tree.app.Repositories
                                            return res;
                                        }).ToList()
                                    }).ToList()
-                };
-                flight.Options.Add(new FlightOptions()
-                {
-                    FieldName = "AdditionalLuggage",
-                    Label = "Baggages supplémentaires",
-                    Price = x.AdditionalLuggagePrice,
-                    Value = 0,
-                    ReturnType = "number"
-                });
-                return flight;
-            }).ToList();
+            };
+            flight.Options.Add(new FlightOptions()
+            {
+                FieldName = "AdditionalLuggage",
+                Label = "Baggages supplémentaires",
+                Price = data.AdditionalLuggagePrice,
+                Value = 0,
+                ReturnType = "number"
+            });
+            return flight;
         }
 
         public static OrderData OrderToOrderData(Order order)
@@ -74,6 +77,7 @@ namespace super_duper_octo_palm_tree.app.Repositories
             return new OrderData
             {
                 ExchangeRate = order.ExchangeRate,
+                Date = order.Date,
                 IsPaid = order.IsPaid,
                 UsedCurrency = Enum.GetName(order.UsedCurrency),
                 User = order.User.Name

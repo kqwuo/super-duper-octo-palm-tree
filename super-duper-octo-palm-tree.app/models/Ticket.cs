@@ -40,7 +40,7 @@ namespace super_duper_octo_palm_tree.app.models
                         if (option.Value is JsonElement)
                             result += ((JsonElement)option.Value).GetInt32() * option.Price;
                         else
-                            result += ((JsonElement)option.Value).GetUInt32() * option.Price;
+                            result += (UInt32)option.Value * option.Price;
                     }
                 }
 

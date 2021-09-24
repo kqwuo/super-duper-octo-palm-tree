@@ -7,6 +7,7 @@ export interface Order {
   user: User
   nbBought: number
   ticketList: Array<Ticket>
+  date: string
   totalBasePrice: number
   totalAdditionalPrice: number
   totalDiscountedBasePrice: number

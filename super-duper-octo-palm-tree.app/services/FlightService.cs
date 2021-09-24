@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using super_duper_octo_palm_tree.app.models;
 using super_duper_octo_palm_tree.app.Repositories;
 
@@ -11,19 +10,19 @@ namespace super_duper_octo_palm_tree.app.services
 
         public FlightService()
         {
-            FlightDataRepository.InitializeData();
+            FlightDataRepository.InitializeRepository();
             OrderDataRepository.InitializeData();
             TicketDataRepository.InitializeData();
         }
 
-        public List<Flight> GetFlights()
+        public List<Flight> GetFlights(DateTime date)
         {
-            return Mapper.GetFlights();
+            return Mapper.GetFlights(date);
         }
 
         public Flight GetFlight(string idFlight)
         {
-            return GetFlights().Find(flight => flight.IdFlight == idFlight);
+            return Mapper.FindFlight(idFlight);
         }
 
     }
