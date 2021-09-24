@@ -51,7 +51,7 @@ namespace super_duper_octo_palm_tree.app.External.Services
             {
                 try
                 {
-                    ExternalTicket externalTicket = MapInternalTicketToExternalTicket(ticket, externalFlight);
+                    ExternalTicket externalTicket = MapInternalTicketToExternalTicket(ticket, externalFlight, order.Date);
 
                     var content = JsonSerializer.Serialize(externalTicket);
                     var response = await _httpClient.PostAsync(
@@ -96,12 +96,12 @@ namespace super_duper_octo_palm_tree.app.External.Services
             });
         }
 
-        public ExternalTicket MapInternalTicketToExternalTicket( Ticket ticket, ExternalFlight externalFlight )
+        public ExternalTicket MapInternalTicketToExternalTicket( Ticket ticket, ExternalFlight externalFlight, string date )
         {
             var result = new ExternalTicket()
             {
                 flight = externalFlight,
-                date = DateTime.UtcNow.ToString("dd-MM-yyyy", DateTimeFormatInfo.InvariantInfo),
+                date = date,
                 payed_price = Convert.ToInt32(ticket.PaidTotal),
                 customer_name = $"${ticket.LastName} ${ticket.FirstName}",
                 booking_source = "oui"
