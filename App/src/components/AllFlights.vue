@@ -93,7 +93,7 @@ export default class AllFlights extends Vue {
 
     this.currencyRate = (
       await axios.get<number>(
-        `http://10.10.10.163:5000/api/currency/${this.allCurrencies[0].type}`
+        `http://localhost:5000/api/currency/${this.allCurrencies[0].type}`
       )
     ).data;
 

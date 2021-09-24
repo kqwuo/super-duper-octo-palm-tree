@@ -34,9 +34,10 @@ namespace super_duper_octo_palm_tree.app.controllers
         }
 
         [HttpGet("getAllFlights")]
-        public async Task<IActionResult> GetAllFlights()
+        public async Task<IActionResult> GetAllFlights([FromQuery]string dateString)
         {
-            return Ok(_flightService.GetFlights().Select(x => new OwnExternalFlight
+            DateTime date = DateTime.Parse(dateString);
+            return Ok(_flightService.GetFlights(date).Select(x => new OwnExternalFlight
             {
                 IdFlight = x.IdFlight,
                 AdditionalLuggagePrice = x.AdditionalLuggagePrice,
